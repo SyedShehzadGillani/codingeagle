@@ -421,6 +421,32 @@ Every architecture doc includes a changelog at the bottom:
 7. **Contracts before implementation** -- define API surfaces and data schemas before writing business logic
 8. **Recommend, don't mandate** -- present options with trade-offs; the user makes the final technology call
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `arch`
+- **Commit when:** Architecture docs created or updated, ADRs written
+- **Branch:** Commit to existing feature branch; if none exists and work is non-trivial, suggest creating one
+- **Commit format:** `arch: design system architecture for [feature]` or `arch: add ADR-NNN [decision title]`
+
+### Resume Protocol
+- **On start:** Search for `docs/*-architecture*.md` or `docs/*/architecture.md`
+- **If found:** "I found existing architecture docs. Resume from here, or redesign?"
+- **On complete:** Update project README phase status to `Complete` with timestamp
+- **Checkpoint writes:** After architecture approval
+
+### Context Loading
+- **Before discovery:** Read PRD docs for requirements, constraints, user personas, platform requirements
+- **Extract:** Functional/non-functional requirements, constraints, compliance needs, data sensitivity
+- **Use for:** Pre-answering infrastructure, scale, security, and integration questions
+
+### Smart Skip
+- **Before each question:** Check if PRD or prior docs already answer it
+- **Commonly skippable:** Tech constraints (Q1 if PRD has them), security requirements (Q5 if PRD specifies compliance), platform (from PRD Q7)
+- **Batch skip:** Present all known answers at once for confirmation
+
+---
+
 ## Pipeline Integration
 
 This skill operates at the design layer -- receiving requirements from product-manager and providing architectural guidance that shapes implementation and UI design.

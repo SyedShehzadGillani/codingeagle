@@ -348,6 +348,27 @@ Mark task "Phase 5: Generate Documentation" as completed.
 
 ---
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **This skill does NOT commit.** It is strictly read-only.
+- If the user wants to save the analysis report, they commit it themselves.
+- Suggest: `git add docs/project-analysis.md && git commit -m "docs: add project analysis report"`
+
+### Resume Protocol
+- **On start:** Search for `docs/project-analysis*`
+- **If found:** "I found a previous analysis. Update it with current state, or run fresh?"
+- **Update mode:** Only re-analyze changed files (check git diff since last analysis date)
+
+### Context Loading
+- Not applicable for analyze (it CREATES context, doesn't consume it)
+- However, if prior analysis exists, use it as a baseline for delta comparison
+
+### Smart Skip
+- Not applicable -- this skill doesn't ask discovery questions
+
+---
+
 ## Rules -- Non-Negotiable
 
 1. **Read-only.** Do NOT modify, refactor, or fix any code during analysis

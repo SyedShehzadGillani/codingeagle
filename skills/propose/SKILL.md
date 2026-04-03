@@ -366,6 +366,24 @@ Mark task "Phase 5: Implementation Plan" as completed.
 
 ---
 
+## Phase 5.5: Git Setup
+
+**Goal:** Create a feature branch for all implementation work.
+
+```
+GIT SETUP
+
+Creating feature branch: feature/[project-slug]
+All implementation, fixes, and optimizations will be committed here.
+PR will be offered at Phase 11 (Final Verification).
+```
+
+Run: `git checkout -b feature/[project-slug]`
+
+If already on a feature branch, skip this step.
+
+---
+
 ## Phase 6: Implementation & QA Loop (Developer + QA + Tech Lead Roles)
 
 **Goal:** Build each task, test it, fix issues, verify.
@@ -417,17 +435,58 @@ QA Result: [PASS / PASS WITH CONDITIONS]
 Issues Found: [count] | Resolved: [count]
 ```
 
+**Git:** Commit after each task passes QA: `feat(task-N): [description]`
+
 Mark the task as completed. Move to next task.
 
 **Repeat 6a-6d for every task in the plan.**
 
 ---
 
-## Phase 7: Vulnerability Testing (Vulnerability Tester Role)
+## Phase 7: Code Review (Code Reviewer Role)
+
+**Goal:** Validate implementation matches specs before security/performance testing.
+
+Create a task: "Phase 7: Code Review" and set it to in_progress.
+
+**Manual Mode:** Enter plan mode, load all spec docs (PRD, architecture, design system, ADRs), conduct full 5-dimension review (spec compliance, architecture, design system, code quality, security quick check). Present findings. Wait for user to decide which to fix.
+
+**Auto Mode:** Conduct full review. Auto-fix blockers and major issues via tech-lead role. Present summary.
+
+### Review Dimensions
+1. **Spec Compliance** -- every user story has corresponding code, acceptance criteria met
+2. **Architecture Compliance** -- component boundaries respected, API contracts match, ADRs followed
+3. **Design System Compliance** -- tokens used (no hardcoded values), component states implemented
+4. **Code Quality** -- naming, complexity, duplication, error handling, test coverage
+5. **Security Quick Check** -- obvious vulnerabilities caught (deeper analysis in Phase 8)
+
+For each finding:
+1. Classify: Blocker / Major / Minor / Nit
+2. If Blocker or Major: hand to tech-lead role for fix, re-review changed files
+3. If Minor/Nit: log for author's discretion
+
+```
+CODE REVIEW SUMMARY
+
+Spec compliance: [N] drift items found
+Architecture compliance: [N] violations found
+Design system compliance: [N] mismatches found
+Code quality: [N] issues found
+Blockers resolved: [N]
+Verdict: [APPROVE / REQUEST CHANGES]
+```
+
+**Git:** Commit fixes: `review: address [N] code review findings`
+
+Mark task "Phase 7: Code Review" as completed.
+
+---
+
+## Phase 8: Security Testing (Vulnerability Tester Role)
 
 **Goal:** Identify and remediate security vulnerabilities before release.
 
-Create a task: "Phase 7: Security Assessment" and set it to in_progress.
+Create a task: "Phase 8: Security Assessment" and set it to in_progress.
 
 **Manual Mode:** Enter plan mode and ask the vulnerability testing discovery questions (scope, architecture, data sensitivity, tech stack, previous security work, testing depth, remediation expectation). Conduct full assessment.
 
@@ -463,15 +522,58 @@ Security posture: [CRITICAL RISK | HIGH RISK | MODERATE RISK | LOW RISK | SECURE
 **Manual Mode:** Present full security report for review.
 **Auto Mode:** Auto-remediate Critical/High, present summary.
 
-Mark task "Phase 7: Security Assessment" as completed.
+**Git:** Commit security fixes: `security: remediate [N] vulnerabilities`
+
+Mark task "Phase 8: Security Assessment" as completed.
 
 ---
 
-## Phase 8: UX Review (UX Reviewer Role)
+## Phase 9: Performance Testing (Performance Tester Role)
+
+**Goal:** Identify and resolve performance bottlenecks.
+
+Create a task: "Phase 9: Performance Assessment" and set it to in_progress.
+
+**Manual Mode:** Enter plan mode and ask performance discovery questions (scope, targets, symptoms, user environment, tech stack, constraints). Conduct full assessment.
+
+**Auto Mode:** Conduct standard performance assessment using industry benchmarks. Auto-fix critical and major findings. Present summary.
+
+Assess across all categories:
+1. **Frontend** -- bundle size, render performance, Core Web Vitals, network waterfall
+2. **Backend** -- API response times (p50/p95/p99), connection pooling, timeout config
+3. **Database** -- N+1 queries, missing indexes, full table scans, unbounded queries
+4. **Infrastructure** -- CDN, compression, caching headers, geographic latency
+
+For each finding:
+1. Measure current value vs target
+2. Root-cause the bottleneck
+3. Hand to tech-lead role for optimization
+4. Re-measure after fix
+
+```
+PERFORMANCE SUMMARY
+
+Core Web Vitals: [PASS/FAIL]
+Bundle size: [value] / [budget]
+API p95: [value] / [target]
+Top bottleneck: [description]
+Optimizations applied: [count]
+```
+
+**Git:** Commit optimizations: `perf: optimize [N] performance bottlenecks`
+
+**Manual Mode:** Present full performance report.
+**Auto Mode:** Auto-fix critical/major, present summary.
+
+Mark task "Phase 9: Performance Assessment" as completed.
+
+---
+
+## Phase 10: UX Review (UX Reviewer Role)
 
 **Goal:** Evaluate and improve user experience quality.
 
-Create a task: "Phase 8: UX Review" and set it to in_progress.
+Create a task: "Phase 10: UX Review" and set it to in_progress.
 
 **Manual Mode:** Enter plan mode and ask the UX review discovery questions (scope, user context, critical tasks, known pain points, accessibility requirements, platform, brand tone, competitive context). Conduct full heuristic evaluation. Present prioritized improvement plan. Wait for user to choose which improvements to apply.
 
@@ -502,15 +604,17 @@ Improvements proposed (Tier 2+): [count]
 **Manual Mode:** Present full report and improvement plan.
 **Auto Mode:** Apply Tier 1, present Tier 2+ for user decision.
 
-Mark task "Phase 8: UX Review" as completed.
+**Git:** Commit UX improvements: `ux: apply [N] UX improvements`
+
+Mark task "Phase 10: UX Review" as completed.
 
 ---
 
-## Phase 9: Final Verification (QA + Security + UX Integration)
+## Phase 11: Final Verification & Delivery (All Roles)
 
-**Goal:** Full integration test across all completed work.
+**Goal:** Full integration test, delivery report, and git finalization.
 
-Create a task: "Phase 9: Final Verification" and set it to in_progress.
+Create a task: "Phase 11: Final Verification" and set it to in_progress.
 
 Run a comprehensive verification pass across the entire implementation:
 
@@ -522,6 +626,8 @@ Run a comprehensive verification pass across the entire implementation:
 6. **Design system compliance** -- UI matches the design system from Phase 4
 7. **Security re-verification** -- vulnerability fixes still intact, no new issues
 8. **Accessibility verification** -- WCAG compliance across all pages/flows
+9. **Performance re-check** -- performance optimizations still effective
+10. **Code review re-check** -- no spec drift from late-stage fixes
 
 ### Final Delivery Report
 
@@ -530,7 +636,7 @@ Run a comprehensive verification pass across the entire implementation:
 
 **Product:** [name]
 **Date:** [date]
-**Phases Completed:** 1-9
+**Phases Completed:** 1-11
 **Mode:** [Manual / Auto]
 
 ### Requirements Coverage
@@ -563,6 +669,19 @@ Run a comprehensive verification pass across the entire implementation:
 | Medium   | [n]   | [n]   | [n]      |
 | Low      | [n]   | [n]   | [n]      |
 
+### Code Review Summary
+- Spec drift items: [n] found, [n] resolved
+- Architecture violations: [n] found, [n] resolved
+- Design system mismatches: [n] found, [n] resolved
+- Verdict: [APPROVED]
+
+### Performance Summary
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| LCP | [value] | < 2.5s | [PASS/FAIL] |
+| Bundle size | [value] | < 200KB | [PASS/FAIL] |
+| API p95 | [value] | < 500ms | [PASS/FAIL] |
+
 ### UX Summary
 - Heuristic Score: [1-5 average]
 - Accessibility: [PASS/FAIL]
@@ -571,11 +690,38 @@ Run a comprehensive verification pass across the entire implementation:
 ### Files Created/Modified
 [Complete list]
 
+### Git Summary
+- Branch: feature/[slug]
+- Commits: [N]
+- Files changed: [N]
+
 ### Recommendation
 [SHIP | SHIP WITH CONDITIONS | DO NOT SHIP -- with reasoning]
 ```
 
-Mark task "Phase 9: Final Verification" as completed.
+### Git Finalization
+
+After the delivery report:
+
+```
+GIT FINALIZATION
+
+Branch: feature/[project-slug]
+Commits: [N] commits across [N] phases
+Files changed: [N]
+
+Options:
+1. Create Pull Request (recommended for team projects)
+   -> PR with delivery report as description
+2. Merge to main (for solo developers)
+   -> Merge feature branch into main
+3. Keep branch (for further iteration)
+   -> Leave as-is, come back later
+```
+
+**Git:** Final commit: `feat: complete [project-name] -- all phases passed`
+
+Mark task "Phase 11: Final Verification" as completed.
 
 ---
 
@@ -596,9 +742,11 @@ docs/[project-slug]/
   design-system.md             -- Design system overview (from Phase 4)
   design-system/               -- Design tokens, components, implementation guide
   qa-report.md                 -- QA verification report (from Phase 6)
-  security-report.md           -- Security assessment (from Phase 7)
-  ux-review.md                 -- UX review report (from Phase 8)
-  delivery-report.md           -- Final delivery report (from Phase 9)
+  code-review.md               -- Code review report (from Phase 7)
+  security-report.md           -- Security assessment (from Phase 8)
+  performance-report.md        -- Performance assessment (from Phase 9)
+  ux-review.md                 -- UX review report (from Phase 10)
+  delivery-report.md           -- Final delivery report (from Phase 11)
 ```
 
 ### Rules
@@ -629,9 +777,11 @@ Last updated: [YYYY-MM-DD]
 | 4. UI Design | [...] | [design-system.md](./design-system.md) |
 | 5. Implementation Plan | [...] | [inline] |
 | 6. Build + QA | [...] | [qa-report.md](./qa-report.md) |
-| 7. Security | [...] | [security-report.md](./security-report.md) |
-| 8. UX Review | [...] | [ux-review.md](./ux-review.md) |
-| 9. Final Verification | [...] | [delivery-report.md](./delivery-report.md) |
+| 7. Code Review | [...] | [code-review.md](./code-review.md) |
+| 8. Security | [...] | [security-report.md](./security-report.md) |
+| 9. Performance | [...] | [performance-report.md](./performance-report.md) |
+| 10. UX Review | [...] | [ux-review.md](./ux-review.md) |
+| 11. Final Verification | [...] | [delivery-report.md](./delivery-report.md) |
 
 ## Problem Statement
 [Brief from Phase 1]
@@ -651,8 +801,8 @@ Phase 0 (optional): Spec Sharder
   |  Unorganized ideas -> Structured task list
   |  User picks item -> feeds into Phase 1
   v
-Phase 1: Discovery (PM)
-  |  10 questions -> Problem Statement
+Phase 1: Discovery (PM) -- Resume: check docs/ for prior sessions
+  |  10 questions (Smart Skip: reuse known answers)
   |  Gate: User approves problem statement
   v
 Phase 2: PRD (PM)
@@ -671,24 +821,67 @@ Phase 5: Implementation Plan (Tech Lead)
   |  Tasks ordered by dependency
   |  Gate: User approves plan
   v
+Phase 5.5: Git Setup -- create feature/[slug] branch
+  v
 Phase 6: Build + QA Loop (Developer + QA + Tech Lead)
-  |  For each task: implement -> test -> fix -> verify
+  |  For each task: implement -> test -> fix -> verify -> commit
   |  No gate (continuous)
   v
-Phase 7: Security Testing (Vulnerability Tester)
+Phase 7: Code Review (Code Reviewer)
+  |  Spec compliance + architecture + design + quality + security
+  |  Gate: Review verdict
+  v
+Phase 8: Security Testing (Vulnerability Tester)
   |  OWASP Top 10 -> findings -> remediate -> re-verify
   |  Gate: Security report review
   v
-Phase 8: UX Review (UX Reviewer)
+Phase 9: Performance Testing (Performance Tester)
+  |  Frontend + backend + database + infrastructure
+  |  Gate: Performance report review
+  v
+Phase 10: UX Review (UX Reviewer)
   |  Heuristics + WCAG -> improvements -> apply
   |  Gate: User selects improvements
   v
-Phase 9: Final Verification (All Roles)
-  |  Integration -> delivery report
+Phase 11: Final Verification & Delivery (All Roles)
+  |  Integration -> delivery report -> git finalization (PR/merge)
   |  Final: SHIP / SHIP WITH CONDITIONS / DO NOT SHIP
 ```
 
-**Auto Mode removes gates at Phases 1-5, 7. Phase 8 has a partial gate (Tier 2+ only). Phase 9 always reports.**
+**Auto Mode removes gates at Phases 1-5, 7-9. Phase 10 has a partial gate (UX Tier 2+ only). Phase 11 always reports and offers git finalization.**
+
+**Resume Protocol:** At startup, check `docs/*/README.md` for phase status. If prior phases are complete, offer to resume from last incomplete phase. All phases use Smart Skip for discovery questions already answered in prior docs.
+
+---
+
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Phase 5.5:** Create feature branch `feature/[project-slug]`
+- **Phase 6:** Commit after each task passes QA: `feat(task-N): [description]`
+- **Phase 7:** Commit review fixes: `review: address [N] findings`
+- **Phase 8:** Commit security fixes: `security: remediate [N] vulnerabilities`
+- **Phase 9:** Commit optimizations: `perf: optimize [N] bottlenecks`
+- **Phase 10:** Commit UX improvements: `ux: apply [N] improvements`
+- **Phase 11:** Final commit + PR/merge: `feat: complete [project-name]`
+
+### Resume Protocol
+- **On start:** Search `docs/*/README.md` for phase status table
+- **If found:** Offer to resume from last incomplete phase
+- **Each phase:** Updates README status to `Complete` with timestamp on completion
+- **Partial phases:** If a phase is `In Progress`, load partial output and continue
+
+### Context Loading
+- **Phase 1-2:** No prior context expected (this IS the context creation)
+- **Phase 3+:** Load PRD before starting architecture
+- **Phase 4+:** Load PRD + architecture before starting design
+- **Phase 6+:** Load all prior docs as implementation context
+- **Phase 7-10:** Load all docs as review baselines
+
+### Smart Skip
+- **Each phase:** Uses Smart Skip for its discovery questions
+- **Cumulative:** Later phases have more context available, so more questions can be skipped
+- **Override:** User can always say "ask me everything" to disable Smart Skip
 
 ---
 
@@ -727,7 +920,9 @@ Every skill can communicate with every other skill through the defined handoff p
 | ui-designer | tech-lead, ux-reviewer | Design system, component specs, visual changes |
 | qa-tester | tech-lead, product-architect, product-manager | Bug reports, patterns, ambiguities |
 | tech-lead | all skills | Fix reports, escalations, technical constraints |
+| code-reviewer | tech-lead, product-manager, product-architect, ui-designer | Spec drift, architecture violations, design mismatches |
 | vulnerability-tester | tech-lead, product-architect | Security findings, architectural flaws |
+| performance-tester | tech-lead, product-architect, ui-designer | Performance bottlenecks, architecture-level optimizations |
 | ux-reviewer | ui-designer, tech-lead, product-manager | UX findings, design changes, requirement gaps |
 
 ---
@@ -742,7 +937,11 @@ Every skill can communicate with every other skill through the defined handoff p
 6. **Ask questions, don't assume.** If something is ambiguous, ask. Ambiguity in specs becomes bugs in code
 7. **Each QA finding gets root-caused.** No "it works now" without understanding why it didn't before
 8. **The PRD is the source of truth.** Every implementation decision traces back to it
-9. **Security is not optional.** Phase 7 always runs, even in Auto Mode
-10. **UX is not optional.** Phase 8 always runs; user experience is a product requirement
-11. **Document everything.** Every phase creates/updates markdown docs. The master README tracks overall status. All docs live in `docs/[project-slug]/`
-12. **Update, never recreate.** If a doc already exists, modify it in place. Add changelog entries. Never overwrite prior decisions without documenting why
+9. **Security is not optional.** Phase 8 always runs, even in Auto Mode
+10. **UX is not optional.** Phase 10 always runs; user experience is a product requirement
+11. **Performance is not optional.** Phase 9 always runs; "it works" is not the same as "it works fast"
+12. **Code review before release testing.** Phase 7 catches spec drift before security/performance/UX testing
+13. **Document everything.** Every phase creates/updates markdown docs. The master README tracks overall status. All docs live in `docs/[project-slug]/`
+14. **Update, never recreate.** If a doc already exists, modify it in place. Add changelog entries. Never overwrite prior decisions without documenting why
+15. **Git discipline.** Feature branch at Phase 5.5. Commit per task. PR or merge at Phase 11. Never commit to main during pipeline execution
+16. **Resume, don't restart.** Check for prior phase docs on startup. Offer to resume from last checkpoint. Smart Skip for already-answered questions

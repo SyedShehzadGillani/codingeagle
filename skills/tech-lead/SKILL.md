@@ -305,6 +305,31 @@ When reviewing code (own or others'), evaluate against:
 6. **Escalate design flaws** -- if root-cause analysis reveals an architectural issue, flag it rather than applying a band-aid
 7. **Ask before assuming** -- when the root cause is unclear, gather more context rather than guessing
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `fix`
+- **Commit when:** After each fix is implemented and passes tests
+- **Branch:** Commit to existing feature branch; for hotfixes, use `hotfix/[bug-id]`
+- **Commit format:** `fix(scope): resolve [bug description]` -- e.g., `fix(auth): resolve session expiry race condition`
+- **One commit per fix** -- don't bundle multiple fixes into one commit
+
+### Resume Protocol
+- **On start:** Search for `docs/*-triage*.md` for existing triage log
+- **If found:** "I found an existing triage log. Continuing from last entry."
+- **On complete:** Append resolution entry to triage log
+
+### Context Loading
+- **Before triage:** Read QA reports, security reports, architecture docs
+- **Extract:** Known bug patterns, architectural constraints, prior fix history
+- **Use for:** Pre-answering context questions about recent changes and code familiarity
+
+### Smart Skip
+- **Commonly skippable:** Issue context (Q1 if QA report provided), reproduction status (Q2 if steps in bug report), recent changes (Q4 from git log)
+- **Never skip:** Impact assessment (Q3) -- always verify blast radius even if reported
+
+---
+
 ## Pipeline Integration
 
 This skill sits between QA discovery and QA re-verification. You receive findings, resolve them, and hand back for validation.

@@ -244,6 +244,31 @@ This skill creates and maintains markdown documentation. Follow these rules:
 5. **Clarify before assuming** -- when a requirement is underspecified, surface the ambiguity as a potential defect source rather than guessing intent
 6. **Ask, don't guess** -- when testing context is unclear, ask for clarification rather than making assumptions that could lead to wasted effort
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `qa`
+- **Commit when:** QA report file created or updated (does NOT commit code fixes -- tech-lead does that)
+- **Branch:** Commit to existing feature branch
+- **Commit format:** `qa: initial QA pass for [feature]` or `qa: re-verification after fix cycle [N]`
+
+### Resume Protocol
+- **On start:** Search for `docs/*-qa-report*.md`
+- **If found:** "I found a previous QA report. Continue with re-verification, or run a fresh pass?"
+- **On complete:** Update project README phase status; update QA report changelog
+
+### Context Loading
+- **Before discovery:** Read PRD (acceptance criteria), architecture docs (component boundaries), design system (visual specs)
+- **Extract:** Acceptance criteria as test basis, component contracts, design tokens for UI coherence checks
+- **Use for:** Pre-building the test plan, skipping requirements basis question (Q2) if PRD exists
+
+### Smart Skip
+- **Commonly skippable from PRD:** Requirements basis (Q2), user context (Q3 from PM personas)
+- **Commonly skippable from prior QA:** Known issues (Q4 from previous QA report)
+- **Never skip:** Testing scope (Q1), quality bar (Q6), depth (Q7) -- these change per invocation
+
+---
+
 ## Pipeline Integration
 
 This skill operates within an integrated SDLC pipeline. After completing a QA pass, you MUST follow the feedback loop below.

@@ -447,6 +447,33 @@ Recommendation: [Option] because [reasoning tied to stated goals]
 6. **Trade-offs, not compromises** -- every decision has a cost; make the cost visible and choose deliberately
 7. **Ask, don't assume** -- when in doubt, ask another question; wrong assumptions compound into wrong products
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `prd`
+- **Commit when:** PRD file created or updated
+- **Branch:** If not on a feature branch and creating a new PRD, suggest `feature/[project-slug]`
+- **Commit format:** `prd: define requirements for [feature]` or `prd: update scope based on [feedback source]`
+
+### Resume Protocol
+- **On start:** Search for `docs/*-prd*.md` or `docs/*/prd.md`
+- **If found:** "I found an existing PRD from a previous session. Resume from here, or start fresh?"
+- **On complete:** Update project README phase status to `Complete` with timestamp
+- **Checkpoint writes:** After PRD approval (Manual Mode) or after PRD generation (Auto Mode)
+
+### Context Loading
+- **Before discovery:** Search `docs/*/` for any project docs
+- **Extract:** Prior problem statements, user personas, constraints, tech context from architecture docs
+- **Use for:** Pre-filling answers, informing priority decisions, avoiding contradictions
+
+### Smart Skip
+- **Before each question:** Check if answer exists in loaded context
+- **If found:** Show extracted answer, ask "Still correct? (yes/modify)"
+- **Batch skip:** If 3+ questions have known answers, present all at once for confirmation
+- **Never silently skip** -- user always sees what's being reused
+
+---
+
 ## Pipeline Integration
 
 This skill operates upstream in the SDLC pipeline -- defining requirements that flow to architecture, design, development, and QA.

@@ -2,98 +2,111 @@
 
 ## What We Built
 
-10 skills packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
+12 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
 
 | Skill | Purpose |
 |-------|---------|
-| `codingeagle:product-manager` | Defines requirements, PRDs, user stories. Plan mode with 10 discovery questions asked one at a time. Supports **Auto Mode** that chains all skills automatically. Manual invoke only. |
-| `codingeagle:product-architect` | System design, tech stack, data models, API contracts, ADRs. Plan mode with 10 architecture questions. Recommends options with trade-offs, user chooses. |
-| `codingeagle:ui-designer` | Visual design system, color schemes, typography, component specs. Plan mode with 10 design questions. Shows 3 direction options. Accepts screenshots/logos/visual references. Comes after product-architect. |
-| `codingeagle:tech-lead` | Triages QA findings, root-cause analysis, implements fixes, code review. Plan mode with 7 diagnostic questions. |
-| `codingeagle:qa-tester` | Functional testing with 4-pillar framework. Plan mode with 7 discovery questions. Includes full feedback loop (find -> fix -> re-verify, max 3 iterations). |
-| `codingeagle:vulnerability-tester` | Professional ethical hacker. 10-category OWASP-aligned security assessment. CVSS scoring. Plan mode with 7 scoping questions. Feeds findings to tech-lead for remediation. |
-| `codingeagle:ux-reviewer` | Heuristic evaluation (Nielsen's 10) + WCAG 2.1 accessibility audit. Plan mode with 8 discovery questions. Prioritized improvement tiers. User selects what to apply. |
-| `codingeagle:spec-sharder` | Preprocessor that takes scattered ideas, brain dumps, or large tasks and organizes them into structured, prioritized task lists with AI commentary. Feeds into /propose. Two modes: organize (scattered points) and shard (big task decomposition). Manual invoke only. |
-| `codingeagle:propose` | Full spec-driven pipeline: Spec Shard (optional) -> Discovery -> PRD -> Architecture -> UI Design -> Implementation Plan -> Build+QA Loop -> Vulnerability Testing -> UX Review -> Final Verification. Supports Manual (9 gates) and Auto mode. |
-| `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. References all 9 other skills. |
+| `codingeagle:product-manager` | Defines requirements, PRDs, user stories. Plan mode with 10 discovery questions. Supports **Auto Mode** that chains all skills automatically. Manual invoke only. |
+| `codingeagle:product-architect` | System design, tech stack, data models, API contracts, ADRs. Plan mode with 10 architecture questions. Recommends options with trade-offs. |
+| `codingeagle:ui-designer` | Visual design system, color schemes, typography, component specs. Plan mode with 10 design questions. Shows 3 direction options. Accepts screenshots/logos. |
+| `codingeagle:tech-lead` | Triages QA/security findings, root-cause analysis, implements fixes, code review. Plan mode with 7 diagnostic questions. |
+| `codingeagle:qa-tester` | Functional testing with 4-pillar framework. Plan mode with 7 discovery questions. Full feedback loop (find -> fix -> re-verify, max 3 iterations). |
+| `codingeagle:code-reviewer` | Reviews implementation against PRD, architecture, and design system. 5-dimension review (spec compliance, architecture, design, quality, security). Catches spec drift. |
+| `codingeagle:vulnerability-tester` | Professional ethical hacker. 10-category OWASP-aligned security assessment. CVSS scoring. Plan mode with 7 scoping questions. |
+| `codingeagle:performance-tester` | Frontend (Core Web Vitals, bundle size), backend (API latency, N+1 queries), database (indexes, pagination), infrastructure (CDN, caching). |
+| `codingeagle:ux-reviewer` | Heuristic evaluation (Nielsen's 10) + WCAG 2.1 accessibility audit. Prioritized improvement tiers. User selects what to apply. |
+| `codingeagle:spec-sharder` | Preprocessor: takes scattered ideas or big tasks, organizes into structured, prioritized task lists with AI commentary. Feeds into /propose. |
+| `codingeagle:propose` | Full 11-phase SDLC pipeline with git workflow. Manual (11 gates) and Auto mode. Resume protocol for interrupted sessions. |
+| `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. |
 
-## Key Design Decisions
+## Pipeline Phases
 
-- **Skills over subagents** for the SDLC pipeline because roles need shared conversation context for iterative feedback loops
-- **Subagents** are better for parallel independent work (e.g., fixing 3 bugs at once, searching multiple directories)
-- All skills support **$ARGUMENTS** (e.g., `/codingeagle:qa-tester src/auth/login.tsx`)
-- All skills are **interconnected** with handoff protocols, escalation triggers, and inter-skill communication protocols
-- All skills start in **plan mode** and ask **extensive discovery questions** one at a time before taking action
-- All skills **recommend options with trade-offs** but let the user make the final decision
-- `product-manager` has `disable-model-invocation: true` so Claude won't auto-trigger it
-- `propose` has `disable-model-invocation: true` -- manual invoke only
-- `analyze` has `disable-model-invocation: true` -- manual invoke only
+```
+Phase 0 (optional): Spec Sharder
+Phase 1: Product Discovery (PM)
+Phase 2: PRD (PM)
+Phase 3: System Architecture (Architect)
+Phase 4: UI Design (UI Designer)
+Phase 5: Implementation Plan (Tech Lead)
+Phase 5.5: Git Setup (create feature branch)
+Phase 6: Build + QA Loop (Developer + QA + Tech Lead)
+Phase 7: Code Review (Code Reviewer) -- NEW
+Phase 8: Security Testing (Vulnerability Tester)
+Phase 9: Performance Testing (Performance Tester) -- NEW
+Phase 10: UX Review (UX Reviewer)
+Phase 11: Final Verification & Delivery (All Roles + Git PR/Merge)
+```
+
+## Cross-Cutting Protocols (PROTOCOLS.md)
+
+Four protocols applied to ALL 12 skills:
+
+### 1. Git Workflow
+- Feature branch created at Phase 5.5 (`feature/[project-slug]`)
+- Each skill has a commit tag and commit trigger
+- Commits after each task/fix/optimization
+- PR or merge offered at Phase 11
+- Commit format: `[tag](scope): description`
+
+### 2. Resume / Checkpoint Protocol
+- Each phase writes status to `docs/[project-slug]/README.md`
+- On start: check for prior session docs
+- If found: offer to resume from last completed phase
+- Supports partial phase recovery (continue from where it left off)
+
+### 3. Context Pass-Through
+- Skills read existing project docs BEFORE asking questions
+- Extract key decisions into an internal context map
+- Cross-reference: link to other skills' docs, don't duplicate
+- Each skill ensures its output is scannable by other skills
+
+### 4. Smart Skip
+- Before each discovery question: check if answer exists in loaded context
+- If found: "Based on [source], I know [answer]. Correct? (yes/modify)"
+- Batch skip when multiple answers available
+- Never silently skip -- user always confirms
+- Each skill defines which questions can be skipped and which never skip
 
 ## Document Output System
 
-All skills create and maintain markdown files following these rules:
-- **Small outputs** (< 15 lines per item) go inline in the master doc
-- **Large outputs** get their own `.md` file, referenced from the master doc
-- **Update, never recreate** -- modify existing docs in place with changelog entries
-- **Reference, don't duplicate** -- link to other skill docs instead of copying content
-- Each skill has its own file naming convention (see "Document Output" section in each SKILL.md)
-- The propose pipeline creates a full `docs/[project-slug]/` directory with master README linking all phase docs
+All skills create and maintain markdown files:
+- **Small outputs** (< 15 lines) go inline in the master doc
+- **Large outputs** get their own `.md` file, referenced from master
+- **Update, never recreate** -- modify in place with changelog entries
+- **Reference, don't duplicate** -- link to other skills' docs
+- Propose pipeline creates full `docs/[project-slug]/` directory
 
-## Spec Sharder
+## Key Design Decisions
 
-The spec-sharder sits BEFORE all other skills in the pipeline:
-```
-Raw ideas / brain dump -> spec-sharder -> organized task list -> /propose [item]
-```
-- Two modes: Organize (scattered points) and Shard (decompose big task)
-- Every item gets AI commentary: approach, feasibility, complexity, dependencies, risks
-- Output is a markdown file with `/propose` commands ready to execute
-- Can merge new points into existing shards
+- **Skills over subagents** for the SDLC pipeline (shared conversation context)
+- **Subagents** for parallel independent work
+- All skills support **$ARGUMENTS**
+- All skills start in **plan mode** with extensive discovery questions
+- All skills are **interconnected** with handoff protocols, escalation triggers, and inter-skill communication
+- All skills have **Cross-Cutting Protocols** section (git, resume, context, smart skip)
+- `product-manager`, `propose`, `spec-sharder`, `analyze` have `disable-model-invocation: true`
 
 ## Auto Mode
 
 Product Manager and Propose pipeline both support Auto Mode:
-- User answers discovery questions (can't automate understanding the problem)
+- User answers discovery questions (can't automate understanding)
 - All subsequent phases run automatically without approval gates
-- Only pauses on CRITICAL issues or UX Tier 2+ improvements
-- Uses sensible defaults (boring tech, WCAG AA, standard security assessment)
+- Pauses on CRITICAL issues or UX Tier 2+ improvements
+- Uses sensible defaults (boring tech, WCAG AA, standard assessments)
 
 ## Role Clarifications
 
 - **Product Manager** vs **Product Architect**: PM owns the *problem* (what/why), Architect owns the *solution design* (how)
 - **Product Architect** vs **UI Designer**: Architect defines structure and tech stack, Designer defines visual system within those constraints
-- **UI Designer** vs **UX Reviewer**: Designer creates the design system proactively, UX Reviewer evaluates what was built against usability principles
-- **Product Architect** vs **Tech Lead**: Architect prevents future problems (designs systems), Tech Lead solves current ones (fixes bugs)
-- **QA Tester** vs **Vulnerability Tester**: QA finds functional bugs, Vulnerability Tester finds security bugs
+- **UI Designer** vs **UX Reviewer**: Designer creates the design system proactively, UX Reviewer evaluates what was built
+- **Code Reviewer** vs **Tech Lead**: Reviewer catches spec drift and quality issues, Tech Lead actually fixes them
+- **QA Tester** vs **Vulnerability Tester** vs **Performance Tester**: QA = functional, Security = vulnerabilities, Performance = speed/efficiency
+- **Spec Sharder** vs **Product Manager**: Sharder organizes chaos into structure, PM turns structure into specs
 - **Developer** is Claude's default behavior -- skills add the surrounding roles
 
-## Inter-Skill Communication
+## Planned Future Skills
 
-Every skill has a defined Inter-Skill Communication Protocol that specifies:
-1. What it receives from other skills (and when)
-2. What it hands off to other skills (and when)
-3. Escalation triggers (when to involve other skills)
-4. Feedback loops (how fixes cycle back through verification)
-
-Key communication paths:
-```
-PM -> Architect -> UI Designer -> Implementation -> QA -> Tech Lead
-                                                    |
-                                            Vulnerability Tester
-                                                    |
-                                              UX Reviewer
-```
-
-## Skills vs Subagents vs Custom Agents
-
-- **Skills** (`~/.claude/skills/`): Change Claude's mindset in same conversation. Best for iterative work.
-- **Custom Subagents** (`~/.claude/agents/`): Separate Claude instances with own context, tools, model. Best for isolation and parallel work.
-- **Custom Agents (SDK)**: Building your own AI apps with Anthropic SDK. Completely different thing.
-
-## Planned Future Skills (Not Yet Built)
-
-**Tier 1 (next to build):**
-- `code-reviewer` -- PR/diff review for quality, security, SOLID
+**Tier 1:**
 - `devops` -- Dockerfiles, CI/CD, deployment, infra-as-code
 - `api-designer` -- Deep API design (REST/GraphQL)
 
@@ -102,10 +115,7 @@ PM -> Architect -> UI Designer -> Implementation -> QA -> Tech Lead
 - `technical-writer` -- API docs, READMEs, changelogs
 
 **Tier 3:**
-- `performance-analyst` -- Bundle size, render perf, caching
 - `refactorer` -- Code smells, design patterns, complexity reduction
-
-**Tier 4:**
 - `standup` -- Daily standup from git history
 - `changelog` -- Release notes from commits
 - `onboard` -- Explain codebase to new developers

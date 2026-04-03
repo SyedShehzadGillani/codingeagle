@@ -454,6 +454,32 @@ Before finalizing any design system, verify:
 | Font loading | FOUT/FOIT strategy defined |
 | Responsive | All components tested at every breakpoint |
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `design`
+- **Commit when:** Design system docs created or updated
+- **Branch:** Commit to existing feature branch
+- **Commit format:** `design: create design system for [project]` or `design: update color palette per UX feedback`
+
+### Resume Protocol
+- **On start:** Search for `docs/*-design-system*.md` or `docs/*/design-system.md`
+- **If found:** "I found an existing design system. Extend it, revise it, or start fresh?"
+- **On complete:** Update project README phase status to `Complete` with timestamp
+
+### Context Loading
+- **Before discovery:** Read PRD (user personas, platform) and architecture docs (tech stack, framework, component library)
+- **Extract:** Framework, CSS approach, target platforms, user personas, brand constraints
+- **Use for:** Pre-answering tech-constrained questions (Q3 audience, Q6 density, Q8 accessibility from PRD)
+- **Architecture handoff:** If architect provided design handoff notes, load and display them before questions
+
+### Smart Skip
+- **Commonly skippable from architecture:** Framework/styling approach, target platforms, rendering strategy
+- **Commonly skippable from PRD:** Target audience, accessibility level, platform requirements
+- **Never skip:** Brand identity (Q1), visual references (Q2), color preferences (Q4) -- these are personal choices
+
+---
+
 ## Pipeline Integration
 
 This skill operates between architecture and implementation -- translating structural decisions into visual specifications that developers implement.

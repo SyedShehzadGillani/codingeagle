@@ -472,6 +472,31 @@ When the user selects improvements to apply:
 7. **Progressive improvement** -- perfect UX doesn't ship; good-enough UX that improves iteratively does
 8. **Don't redesign what works** -- if users complete a task efficiently, don't change it for aesthetic reasons
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `ux`
+- **Commit when:** After UX report written AND after each UX improvement is applied
+- **Branch:** Commit to existing feature branch
+- **Commit format:** `ux: improve [aspect] in [component]` -- e.g., `ux: improve error messages in login flow`
+
+### Resume Protocol
+- **On start:** Search for `docs/*-ux-review*.md`
+- **If found:** "I found a previous UX review. Run post-improvement re-audit, or fresh review?"
+- **On complete:** Update project README phase status; update UX report changelog
+
+### Context Loading
+- **Before discovery:** Read PRD (user personas, critical tasks), design system (visual specs, accessibility level), QA reports (UI coherence findings)
+- **Extract:** User personas, accessibility requirements, design tokens, known UI issues
+- **Use for:** Pre-answering user context (Q2), accessibility (Q5), brand/tone (Q7)
+
+### Smart Skip
+- **Commonly skippable from PRD:** User context (Q2), critical user tasks (Q3)
+- **Commonly skippable from design system:** Accessibility requirements (Q5), brand/tone (Q7)
+- **Never skip:** Review scope (Q1), known pain points (Q4) -- these change per invocation
+
+---
+
 ## Pipeline Integration
 
 This skill evaluates the user experience of implemented features -- typically invoked after implementation but can be used at any phase.

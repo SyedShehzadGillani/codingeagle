@@ -379,6 +379,31 @@ When invoked on a project that already has a shard document:
 6. **Dependencies are critical** -- wrong ordering wastes work; get the sequence right
 7. **This is a preprocessor, not a decision-maker** -- organize and advise, but the user decides what to build and in what order
 
+## Cross-Cutting Protocols
+
+### Git Workflow
+- **Commit tag:** `docs`
+- **Commit when:** Shard document created or updated with new items
+- **Branch:** If starting a new project shard, suggest `feature/[project-slug]`; otherwise commit to current branch
+- **Commit format:** `docs: create spec shard for [project]` or `docs: add [N] items to [project] shard`
+
+### Resume Protocol
+- **On start:** Search for `docs/spec-shard-*.md`
+- **If found for same project:** "I found an existing shard. Merge new items into it, or start fresh?"
+- **If found for different project:** Ignore, create new shard
+- **On complete:** Shard document updated with changelog entry
+
+### Context Loading
+- **Before processing:** Read any existing project docs to understand what's already been built/planned
+- **Extract:** Existing features, tech stack, known constraints, prior shard items
+- **Use for:** Deduplicating against already-planned work, setting appropriate complexity estimates
+
+### Smart Skip
+- Not applicable -- this skill processes input, it doesn't ask discovery questions
+- However, if existing shard found: skip items that already exist (flag duplicates)
+
+---
+
 ## Pipeline Integration
 
 This skill is the **entry point** to the SDLC pipeline -- it sits before everything else and feeds into all other skills.
