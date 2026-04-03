@@ -409,6 +409,40 @@ Wait for user decision before proceeding to implementation.
 
 ---
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| UX report (< 10 findings) | Single file | `docs/ux-review-[project-slug].md` |
+| UX report (10+ findings) | Master + detail files | `docs/ux-review-[project-slug]/README.md` + child docs |
+| Individual UX finding (< 10 lines) | Inline in master | -- |
+| Individual UX finding (10+ lines, with alternatives) | Separate file | `docs/ux-review-[project-slug]/ux-[id].md` |
+| Accessibility audit | Inline if < 30 lines, else separate | `docs/ux-review-[project-slug]/accessibility.md` |
+| Improvement plan | Always in master doc | -- |
+
+### Rules
+
+- **Always create UX reports as markdown files** -- not just conversation output
+- **Update, never recreate** -- post-improvement re-audit appends to the existing report
+- **Reference design system** -- link to design system docs for visual consistency context
+- **Keep the master doc scannable** -- scorecard + improvement tiers + inline or linked findings
+- **Track what was applied** -- mark implemented improvements in the doc
+
+### Report Update Flow
+
+```markdown
+## Changelog
+- [YYYY-MM-DD] Initial UX review: [N] findings, heuristic score [X/5]
+- [YYYY-MM-DD] Tier 1 improvements applied: [list]
+- [YYYY-MM-DD] Post-improvement re-audit: score improved to [X/5]
+```
+
+---
+
 ## Implementation Mode
 
 When the user selects improvements to apply:

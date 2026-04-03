@@ -370,6 +370,39 @@ DELIVERY REPORT
 - The only optional user gate is UX Tier 2+ improvements
 - Auto mode uses sensible defaults where the user would normally choose (e.g., "Standard Assessment" for vulnerability testing)
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| Problem Statement | Always inline in PRD | -- |
+| PRD (small feature, < 50 lines) | Single file | `docs/prd-[feature-slug].md` |
+| PRD (large feature, 50+ lines) | Master + sub-files | `docs/prd-[feature-slug]/README.md` + child docs |
+| User Stories (3 or fewer) | Inline in PRD | -- |
+| User Stories (4+) | Separate file referenced from PRD | `docs/prd-[feature-slug]/user-stories.md` |
+
+### Rules
+
+- **Always create the PRD as a markdown file** -- don't just output it to conversation
+- **Update, never recreate** -- if the PRD already exists, modify it in place with a changelog entry
+- **Reference, don't duplicate** -- if architecture or design docs exist, link to them instead of copying content
+- **Keep the master doc scannable** -- if a section exceeds 30 lines, extract it to a sub-file and link
+
+### Changelog
+
+Every PRD file includes a changelog at the bottom:
+```markdown
+## Changelog
+- [YYYY-MM-DD] Initial PRD created
+- [YYYY-MM-DD] Updated scope based on architect feedback
+- [YYYY-MM-DD] Added user story for [feature]
+```
+
+---
+
 ## Stakeholder Communication
 
 ### Status Updates

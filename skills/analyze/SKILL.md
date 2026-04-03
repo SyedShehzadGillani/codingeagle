@@ -325,7 +325,24 @@ This project is now documented. You can use the other SDLC skills:
 - /ux-reviewer [flow] -- to evaluate and improve user experience
 ```
 
-Ask the user: "Would you like me to save this report to a file in the project? If so, where?"
+**Always save this report as a markdown file.** Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| Analysis report (small project) | Single file | `docs/project-analysis.md` |
+| Analysis report (large project, 5+ components) | Master + sub-files | `docs/project-analysis/README.md` + child docs |
+| Component map (< 20 lines) | Inline in master | -- |
+| Component map (20+ lines) | Separate file | `docs/project-analysis/components.md` |
+| Data model (< 20 lines) | Inline in master | -- |
+| Data model (20+ lines) | Separate file | `docs/project-analysis/data-model.md` |
+| API surface (3+ endpoints) | Separate file | `docs/project-analysis/api-surface.md` |
+| Reconstructed PRD | Always separate | `docs/project-analysis/reconstructed-prd.md` |
+| Health assessment | Inline if < 30 lines, else separate | `docs/project-analysis/health-assessment.md` |
+| Tech debt inventory | Inline if < 20 lines, else separate | `docs/project-analysis/tech-debt.md` |
+
+Ask the user: "I'll save this report to `docs/project-analysis.md` (or `docs/project-analysis/` for larger projects). Want a different location?"
 
 Mark task "Phase 5: Generate Documentation" as completed.
 

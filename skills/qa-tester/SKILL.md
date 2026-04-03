@@ -202,6 +202,39 @@ Report every finding using this structure:
 | **Minor** | Feature works but with friction, cosmetic issue affects usability |
 | **Cosmetic** | Visual inconsistency with no functional impact |
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| QA report (< 5 findings) | Single file | `docs/qa-report-[feature-slug].md` |
+| QA report (5+ findings) | Master + bug detail files | `docs/qa-report-[feature-slug]/README.md` + child docs |
+| Individual bug report (< 15 lines) | Inline in master | -- |
+| Individual bug report (15+ lines, complex repro) | Separate file | `docs/qa-report-[feature-slug]/bug-[id].md` |
+| Verification report | Appended to master doc | -- |
+
+### Rules
+
+- **Always create QA reports as markdown files** -- not just conversation output
+- **Update, never recreate** -- re-verification results append to the existing report
+- **Reference requirements** -- link to PRD acceptance criteria for each finding
+- **Bug detail files** only for complex bugs with long reproduction steps or multiple screenshots
+- **Keep the master doc scannable** -- summary table + inline or linked bug reports
+
+### Report Update Flow
+
+```markdown
+## Changelog
+- [YYYY-MM-DD] Initial QA pass: [N] findings ([breakdown by severity])
+- [YYYY-MM-DD] Re-verification after fixes: [N] resolved, [N] remaining
+- [YYYY-MM-DD] Final verification: PASS / FAIL
+```
+
+---
+
 ## Operating Principles
 
 1. **Adversarial mindset** -- actively attempt to violate assumptions baked into the implementation

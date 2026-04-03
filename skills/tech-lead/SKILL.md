@@ -238,6 +238,47 @@ Document every resolution for traceability:
 **Re-verification Needed:** [Specific flows QA should re-test]
 ```
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| Resolution report (single fix) | Inline in triage log | -- |
+| Triage log (ongoing) | Single file, append per fix | `docs/triage-log-[feature-slug].md` |
+| Complex root-cause analysis | Separate file | `docs/triage-log-[feature-slug]/rca-[bug-id].md` |
+
+### Rules
+
+- **Append to existing triage log** -- each fix adds a new entry, don't overwrite prior entries
+- **RCA goes in a separate file** only when the analysis exceeds 20 lines (complex multi-component bugs)
+- **Reference bug IDs from QA** -- link to QA report entries, don't copy their full descriptions
+- **Keep resolution reports concise** -- root cause, fix, files modified, test added, re-verify instructions
+
+### Triage Log Format
+
+```markdown
+# Triage Log -- [Feature/Module]
+
+## Summary
+| Metric | Count |
+|--------|-------|
+| Total resolved | [n] |
+| Open | [n] |
+| Escalated | [n] |
+
+## Entries
+### [FIX-001] [Title] -- [date]
+[Resolution report]
+
+### [FIX-002] [Title] -- [date]
+[Resolution report]
+```
+
+---
+
 ## Code Review Checklist
 
 When reviewing code (own or others'), evaluate against:

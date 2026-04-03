@@ -24,9 +24,12 @@ When invoked with `/propose $ARGUMENTS`, you MUST:
 
 1. Acknowledge the idea from `$ARGUMENTS`
 2. Enter **plan mode** immediately
-3. Offer mode selection, then begin Phase 1: Discovery
+3. Check if a spec-shard document exists for this project (if so, use it as context)
+4. Offer mode selection, then begin Phase 1: Discovery
 
 If no argument is provided, ask: "What do you want to build?" and wait for a response before proceeding.
+
+**Tip:** If you have scattered ideas or a large task, run `/spec-sharder` first to organize them, then `/propose` on individual items.
 
 ---
 
@@ -576,9 +579,78 @@ Mark task "Phase 9: Final Verification" as completed.
 
 ---
 
+## Document Output
+
+The propose pipeline creates and maintains documentation throughout. Each phase produces its own docs following the document output rules of the active skill role.
+
+### Master Project Doc
+
+The pipeline always creates a master project document:
+
+```
+docs/[project-slug]/
+  README.md                    -- Master doc: overview, status, links to all phase docs
+  prd.md                       -- PRD (from Phase 2)
+  architecture.md              -- Architecture overview (from Phase 3)
+  architecture/                -- Architecture sub-files (ADRs, data model, API contracts)
+  design-system.md             -- Design system overview (from Phase 4)
+  design-system/               -- Design tokens, components, implementation guide
+  qa-report.md                 -- QA verification report (from Phase 6)
+  security-report.md           -- Security assessment (from Phase 7)
+  ux-review.md                 -- UX review report (from Phase 8)
+  delivery-report.md           -- Final delivery report (from Phase 9)
+```
+
+### Rules
+
+- **Each phase creates its docs** following the active role's Document Output rules
+- **Master README.md links to everything** -- one place to see full project status
+- **Small projects** (< 3 components, < 5 user stories): keep docs flat, no sub-directories
+- **Large projects**: use sub-directories as shown above
+- **All docs updated in place** as the pipeline progresses -- never recreate from scratch
+- **Delivery report** in Phase 9 includes links to all other docs
+
+### Master README Format
+
+```markdown
+# [Project Name]
+
+Status: [Discovery / PRD / Architecture / Design / Building / Testing / Security / UX Review / Delivered]
+Mode: [Manual / Auto]
+Started: [YYYY-MM-DD]
+Last updated: [YYYY-MM-DD]
+
+## Phase Status
+| Phase | Status | Doc |
+|-------|--------|-----|
+| 1. Discovery | [Complete/In Progress/Pending] | [inline] |
+| 2. PRD | [...] | [prd.md](./prd.md) |
+| 3. Architecture | [...] | [architecture.md](./architecture.md) |
+| 4. UI Design | [...] | [design-system.md](./design-system.md) |
+| 5. Implementation Plan | [...] | [inline] |
+| 6. Build + QA | [...] | [qa-report.md](./qa-report.md) |
+| 7. Security | [...] | [security-report.md](./security-report.md) |
+| 8. UX Review | [...] | [ux-review.md](./ux-review.md) |
+| 9. Final Verification | [...] | [delivery-report.md](./delivery-report.md) |
+
+## Problem Statement
+[Brief from Phase 1]
+
+## Quick Links
+- [PRD](./prd.md)
+- [Architecture](./architecture.md)
+- [Design System](./design-system.md)
+```
+
+---
+
 ## Phase Flow Diagram
 
 ```
+Phase 0 (optional): Spec Sharder
+  |  Unorganized ideas -> Structured task list
+  |  User picks item -> feeds into Phase 1
+  v
 Phase 1: Discovery (PM)
   |  10 questions -> Problem Statement
   |  Gate: User approves problem statement
@@ -623,6 +695,9 @@ Phase 9: Final Verification (All Roles)
 ## Inter-Skill Communication Map
 
 ```
+  spec-sharder (optional entry point)
+        |
+        v
                     product-manager
                    /       |       \
                   v        v        v
@@ -646,6 +721,7 @@ Every skill can communicate with every other skill through the defined handoff p
 
 | From | To | When |
 |------|----|------|
+| spec-sharder | propose / product-manager | Organized task list with priorities, ready for pipeline execution |
 | product-manager | all skills | PRD updates, requirement clarifications, scope changes |
 | product-architect | ui-designer, tech-lead | Architecture decisions, tech stack, design constraints |
 | ui-designer | tech-lead, ux-reviewer | Design system, component specs, visual changes |
@@ -668,3 +744,5 @@ Every skill can communicate with every other skill through the defined handoff p
 8. **The PRD is the source of truth.** Every implementation decision traces back to it
 9. **Security is not optional.** Phase 7 always runs, even in Auto Mode
 10. **UX is not optional.** Phase 8 always runs; user experience is a product requirement
+11. **Document everything.** Every phase creates/updates markdown docs. The master README tracks overall status. All docs live in `docs/[project-slug]/`
+12. **Update, never recreate.** If a doc already exists, modify it in place. Add changelog entries. Never overwrite prior decisions without documenting why

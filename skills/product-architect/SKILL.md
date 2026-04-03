@@ -362,6 +362,43 @@ Recommended design approach:
 - [Specific recommendation based on tech stack]
 ```
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| Architecture overview (small) | Single file | `docs/architecture-[feature-slug].md` |
+| Architecture overview (large, 3+ components) | Master + sub-files | `docs/architecture-[feature-slug]/README.md` + child docs |
+| Component Map | Inline if < 20 lines, else separate | `docs/architecture-[feature-slug]/components.md` |
+| Data Model | Inline if < 20 lines, else separate | `docs/architecture-[feature-slug]/data-model.md` |
+| API Contracts | Always separate if 3+ endpoints | `docs/architecture-[feature-slug]/api-contracts.md` |
+| ADRs | Always separate, one per decision | `docs/architecture-[feature-slug]/adr-NNN-[title].md` |
+| Tech Stack | Inline in master doc | -- |
+| UI/Design Handoff | Inline if < 15 lines, else separate | `docs/architecture-[feature-slug]/design-handoff.md` |
+
+### Rules
+
+- **Always create architecture docs as markdown files** -- don't just output to conversation
+- **Update, never recreate** -- modify existing docs in place with changelog entries
+- **Reference PRD, don't copy** -- link to the PRD file for requirements context
+- **ADRs are append-only** -- never edit an accepted ADR; supersede it with a new one
+- **Keep the master doc scannable** -- overview + links to detail files
+
+### Changelog
+
+Every architecture doc includes a changelog at the bottom:
+```markdown
+## Changelog
+- [YYYY-MM-DD] Initial architecture designed
+- [YYYY-MM-DD] ADR-002 added: switched from REST to GraphQL
+- [YYYY-MM-DD] Updated data model based on security review
+```
+
+---
+
 ## Architecture Patterns -- Quick Reference
 
 | Pattern | Use When | Avoid When |

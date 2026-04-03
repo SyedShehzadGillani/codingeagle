@@ -380,6 +380,41 @@ Dark Mode Implementation:
 
 Present the complete design system to the user for final approval.
 
+## Document Output
+
+This skill creates and maintains markdown documentation. Follow these rules:
+
+### File Strategy
+
+| Output | Size Rule | File Location |
+|--------|-----------|---------------|
+| Design system (small, < 80 lines) | Single file | `docs/design-system-[project-slug].md` |
+| Design system (large) | Master + sub-files | `docs/design-system-[project-slug]/README.md` + child docs |
+| Design tokens | Always separate | `docs/design-system-[project-slug]/tokens.md` |
+| Component specs (3 or fewer) | Inline in master | -- |
+| Component specs (4+) | Separate file | `docs/design-system-[project-slug]/components.md` |
+| Layout system | Inline if < 20 lines, else separate | `docs/design-system-[project-slug]/layout.md` |
+| Implementation guide | Always separate | `docs/design-system-[project-slug]/implementation.md` |
+
+### Rules
+
+- **Always create design system docs as markdown files** -- not just conversation output
+- **Update, never recreate** -- modify existing docs in place with changelog entries
+- **Reference architecture docs** -- link to architecture for tech stack context, don't copy
+- **Tokens are the source of truth** -- the tokens file is what developers implement from
+- **Keep the master doc scannable** -- design direction summary + links to detail files
+
+### Changelog
+
+```markdown
+## Changelog
+- [YYYY-MM-DD] Initial design system created (direction: [chosen option])
+- [YYYY-MM-DD] Updated color palette based on UX review feedback
+- [YYYY-MM-DD] Added dark mode token set
+```
+
+---
+
 ## When to Use
 
 - After product-architect defines the tech stack and component structure

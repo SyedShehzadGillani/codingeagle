@@ -2,7 +2,7 @@
 
 ## What We Built
 
-9 skills packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
+10 skills packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
 
 | Skill | Purpose |
 |-------|---------|
@@ -13,8 +13,9 @@
 | `codingeagle:qa-tester` | Functional testing with 4-pillar framework. Plan mode with 7 discovery questions. Includes full feedback loop (find -> fix -> re-verify, max 3 iterations). |
 | `codingeagle:vulnerability-tester` | Professional ethical hacker. 10-category OWASP-aligned security assessment. CVSS scoring. Plan mode with 7 scoping questions. Feeds findings to tech-lead for remediation. |
 | `codingeagle:ux-reviewer` | Heuristic evaluation (Nielsen's 10) + WCAG 2.1 accessibility audit. Plan mode with 8 discovery questions. Prioritized improvement tiers. User selects what to apply. |
-| `codingeagle:propose` | Full spec-driven pipeline: Discovery -> PRD -> Architecture -> UI Design -> Implementation Plan -> Build+QA Loop -> Vulnerability Testing -> UX Review -> Final Verification. Supports Manual (9 gates) and Auto mode. |
-| `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. References all 8 other skills. |
+| `codingeagle:spec-sharder` | Preprocessor that takes scattered ideas, brain dumps, or large tasks and organizes them into structured, prioritized task lists with AI commentary. Feeds into /propose. Two modes: organize (scattered points) and shard (big task decomposition). Manual invoke only. |
+| `codingeagle:propose` | Full spec-driven pipeline: Spec Shard (optional) -> Discovery -> PRD -> Architecture -> UI Design -> Implementation Plan -> Build+QA Loop -> Vulnerability Testing -> UX Review -> Final Verification. Supports Manual (9 gates) and Auto mode. |
+| `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. References all 9 other skills. |
 
 ## Key Design Decisions
 
@@ -27,6 +28,27 @@
 - `product-manager` has `disable-model-invocation: true` so Claude won't auto-trigger it
 - `propose` has `disable-model-invocation: true` -- manual invoke only
 - `analyze` has `disable-model-invocation: true` -- manual invoke only
+
+## Document Output System
+
+All skills create and maintain markdown files following these rules:
+- **Small outputs** (< 15 lines per item) go inline in the master doc
+- **Large outputs** get their own `.md` file, referenced from the master doc
+- **Update, never recreate** -- modify existing docs in place with changelog entries
+- **Reference, don't duplicate** -- link to other skill docs instead of copying content
+- Each skill has its own file naming convention (see "Document Output" section in each SKILL.md)
+- The propose pipeline creates a full `docs/[project-slug]/` directory with master README linking all phase docs
+
+## Spec Sharder
+
+The spec-sharder sits BEFORE all other skills in the pipeline:
+```
+Raw ideas / brain dump -> spec-sharder -> organized task list -> /propose [item]
+```
+- Two modes: Organize (scattered points) and Shard (decompose big task)
+- Every item gets AI commentary: approach, feasibility, complexity, dependencies, risks
+- Output is a markdown file with `/propose` commands ready to execute
+- Can merge new points into existing shards
 
 ## Auto Mode
 
