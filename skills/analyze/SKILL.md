@@ -321,7 +321,6 @@ This project is now documented. You can use the other SDLC skills:
 - /ui-designer [screen] -- to create or update the design system
 - /qa-tester [module] -- to deep-test specific areas
 - /tech-lead [issue] -- to triage and fix identified risks
-- /vulnerability-tester [module] -- to run a security assessment
 - /ux-reviewer [flow] -- to evaluate and improve user experience
 ```
 

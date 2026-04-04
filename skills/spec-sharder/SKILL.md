@@ -694,7 +694,6 @@ Structured task list with execution options
 | **User** | Unorganized ideas, big task, brain dump | Raw text to organize |
 | **analyze** | Project analysis completed, next steps needed | Feature inventory and health assessment to organize into action items |
 | **ux-reviewer** | UX findings need prioritization | UX improvement list to organize and annotate |
-| **vulnerability-tester** | Security findings need triage planning | Vulnerability list to organize into remediation plan |
 | **qa-tester** | Multiple QA findings need ordering | Bug list to prioritize and plan fixes |
 
 ### Inter-Skill Communication Protocol

@@ -2,7 +2,7 @@
 
 ## What We Built
 
-12 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
+11 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
 
 | Skill | Purpose |
 |-------|---------|
@@ -12,7 +12,6 @@
 | `codingeagle:tech-lead` | Triages QA/security findings, root-cause analysis, implements fixes, code review. Plan mode with 7 diagnostic questions. |
 | `codingeagle:qa-tester` | Functional testing with 4-pillar framework. Plan mode with 7 discovery questions. Full feedback loop (find -> fix -> re-verify, max 3 iterations). |
 | `codingeagle:code-reviewer` | Reviews implementation against PRD, architecture, and design system. 5-dimension review (spec compliance, architecture, design, quality, security). Catches spec drift. |
-| `codingeagle:vulnerability-tester` | Professional ethical hacker. 10-category OWASP-aligned security assessment. CVSS scoring. Plan mode with 7 scoping questions. |
 | `codingeagle:performance-tester` | Frontend (Core Web Vitals, bundle size), backend (API latency, N+1 queries), database (indexes, pagination), infrastructure (CDN, caching). |
 | `codingeagle:ux-reviewer` | Heuristic evaluation (Nielsen's 10) + WCAG 2.1 accessibility audit. Prioritized improvement tiers. User selects what to apply. |
 | `codingeagle:spec-sharder` | Preprocessor: takes scattered ideas or big tasks, organizes into structured, prioritized task lists with AI commentary. Feeds into /propose. |
@@ -31,10 +30,9 @@ Phase 5: Implementation Plan (Tech Lead)
 Phase 5.5: Git Setup (create feature branch)
 Phase 6: Build + QA Loop (Developer + QA + Tech Lead)
 Phase 7: Code Review (Code Reviewer) -- NEW
-Phase 8: Security Testing (Vulnerability Tester)
-Phase 9: Performance Testing (Performance Tester) -- NEW
-Phase 10: UX Review (UX Reviewer)
-Phase 11: Final Verification & Delivery (All Roles + Git PR/Merge)
+Phase 8: Performance Testing (Performance Tester)
+Phase 9: UX Review (UX Reviewer)
+Phase 10: Final Verification & Delivery (All Roles + Git PR/Merge)
 ```
 
 ## Cross-Cutting Protocols (PROTOCOLS.md)
@@ -100,7 +98,7 @@ Product Manager and Propose pipeline both support Auto Mode:
 - **Product Architect** vs **UI Designer**: Architect defines structure and tech stack, Designer defines visual system within those constraints
 - **UI Designer** vs **UX Reviewer**: Designer creates the design system proactively, UX Reviewer evaluates what was built
 - **Code Reviewer** vs **Tech Lead**: Reviewer catches spec drift and quality issues, Tech Lead actually fixes them
-- **QA Tester** vs **Vulnerability Tester** vs **Performance Tester**: QA = functional, Security = vulnerabilities, Performance = speed/efficiency
+- **QA Tester** vs **Performance Tester**: QA = functional correctness, Performance = speed/efficiency
 - **Spec Sharder** vs **Product Manager**: Sharder organizes chaos into structure, PM turns structure into specs
 - **Developer** is Claude's default behavior -- skills add the surrounding roles
 

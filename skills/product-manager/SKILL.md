@@ -159,7 +159,7 @@ Generate the full PRD following the framework below, then:
 - Evaluating trade-offs between competing stakeholder needs
 - Translating vague requests into structured, buildable specifications
 
-**When NOT to use:** System architecture decisions (use product-architect), UI design (use ui-designer), bug triage (use tech-lead), code implementation (use default Claude), UX evaluation (use ux-reviewer), security testing (use vulnerability-tester).
+**When NOT to use:** System architecture decisions (use product-architect), UI design (use ui-designer), bug triage (use tech-lead), code implementation (use default Claude), UX evaluation (use ux-reviewer).
 
 ## Requirements Framework
 
@@ -343,20 +343,21 @@ Phase 6: Implementation Loop
     Build -> QA (qa-tester) -> Fix -> Verify
   |
   v
-Phase 7: Vulnerability Testing (vulnerability-tester)
-  Invoke: /codingeagle:vulnerability-tester $PROJECT
-  Input: Complete implementation
-  Wait for: Security findings -> auto-remediate
+Phase 7: Code Review (code-reviewer)
+  Validate implementation against specs
   |
   v
-Phase 8: UX Review (ux-reviewer)
+Phase 8: Performance Testing (performance-tester)
+  Frontend + backend + database profiling
+  |
+  v
+Phase 9: UX Review (ux-reviewer)
   Invoke: /codingeagle:ux-reviewer $PROJECT
-  Input: Complete implementation
   Auto-apply: Tier 1 quick wins
   Present: Tier 2+ for user review (only gate in auto mode)
   |
   v
-Phase 9: Final Verification
+Phase 10: Final Verification
   Integration test all components
   Generate delivery report
 
@@ -486,7 +487,6 @@ This skill operates upstream in the SDLC pipeline -- defining requirements that 
 | **ui-designer** | Requirements define user personas and interaction needs | User personas, feature list, brand constraints, platform requirements |
 | **tech-lead** | Requirement clarification requested during bug triage | Clear spec resolution with rationale for the chosen interpretation |
 | **qa-tester** | Feature requirements finalized | Acceptance criteria and user stories as the test basis |
-| **vulnerability-tester** | Security/compliance requirements defined | Data sensitivity classification, compliance requirements, auth model |
 | **ux-reviewer** | UX quality bar defined | User personas, critical tasks, success criteria, known pain points |
 
 ### Input: What You Receive
@@ -497,7 +497,6 @@ This skill operates upstream in the SDLC pipeline -- defining requirements that 
 | **tech-lead** | Fix requires scope change or requirement is blocking resolution | Scope change request with technical justification |
 | **product-architect** | Proposed design exceeds requirements or requires requirement adjustment | Technical constraints that affect product scope |
 | **ui-designer** | Design constraints affect feature scope | Visual limitations that impact feature requirements |
-| **vulnerability-tester** | Security requirements gap found | Missing security requirements, compliance gaps |
 | **ux-reviewer** | UX review reveals missing requirements | User flow gaps, missing error handling requirements, onboarding needs |
 
 ### Inter-Skill Communication Protocol
@@ -512,7 +511,6 @@ HAND OFF TO PIPELINE
   +-- To product-architect: PRD for system design
   +-- To ui-designer: User personas and platform context
   +-- To qa-tester: Acceptance criteria as test basis
-  +-- To vulnerability-tester: Security/compliance requirements
   +-- To ux-reviewer: UX quality expectations
   |
   v
@@ -534,10 +532,6 @@ RECEIVE FEEDBACK
   +-- From UI Designer: "Visual limitation affects features"
   |     -> Evaluate impact on user value
   |     -> Adjust scope or find alternative approach
-  |
-  +-- From Vulnerability Tester: "Missing security requirement"
-  |     -> Add to PRD with appropriate priority
-  |     -> Ensure compliance requirements are met
   |
   +-- From UX Reviewer: "User flow gap found"
   |     -> Add missing requirement to PRD

@@ -377,13 +377,11 @@ This skill evaluates non-functional performance quality -- typically after imple
 ```
 Phase 6: Build + QA Loop
   v
-Phase 6.5: Code Review
+Phase 7: Code Review
   v
-Phase 7: Vulnerability Testing
+Phase 8: PERFORMANCE TESTING (this skill)
   v
-Phase 7.5: PERFORMANCE TESTING (this skill)
-  v
-Phase 8: UX Review
+Phase 9: UX Review
 ```
 
 ### Input: What You Receive

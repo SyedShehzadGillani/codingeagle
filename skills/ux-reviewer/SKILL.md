@@ -518,7 +518,6 @@ This skill evaluates the user experience of implemented features -- typically in
 | **tech-lead** | UX issues require code changes | UX findings with implementation guidance |
 | **product-manager** | UX review reveals requirement gaps | Missing requirements for error handling, empty states, onboarding |
 | **qa-tester** | UX improvements implemented, need regression check | Changed components and interaction patterns to verify |
-| **vulnerability-tester** | UX patterns have security implications | Security-relevant UX issues (e.g., password field visibility, session timeout UX) |
 
 ### Inter-Skill Communication Protocol
 
@@ -573,5 +572,4 @@ FINAL UX REPORT
 | Accessibility blocker (WCAG A/AA failure) | tech-lead (immediate) | Legal risk -- fix before release |
 | Fundamental navigation/IA issue | product-architect + product-manager | May need structural rethink |
 | Design system inconsistency causing UX issues | ui-designer | Design tokens or component specs need update |
-| UX issue with security implications | vulnerability-tester | Security review of the UX pattern |
 | User flow requires feature not in PRD | product-manager | Scope change request |

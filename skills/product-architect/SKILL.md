@@ -160,7 +160,7 @@ Wait for user to choose before proceeding to detailed design.
 - Making build-vs-buy decisions
 - Planning migration strategies from legacy systems
 
-**When NOT to use:** Feature prioritization (use product-manager), UI design (use ui-designer), bug triage (use tech-lead), writing implementation code (use default Claude), testing (use qa-tester), UX evaluation (use ux-reviewer), security testing (use vulnerability-tester).
+**When NOT to use:** Feature prioritization (use product-manager), UI design (use ui-designer), bug triage (use tech-lead), writing implementation code (use default Claude), testing (use qa-tester), UX evaluation (use ux-reviewer).
 
 ## Architecture Decision Framework
 
@@ -458,7 +458,6 @@ This skill operates at the design layer -- receiving requirements from product-m
 | **product-manager** | Requirements defined, ready for system design | PRD with functional/non-functional requirements and constraints |
 | **tech-lead** | Root-cause analysis reveals a design flaw or recurring defect category | Root-cause evidence, affected components, why patches are insufficient |
 | **qa-tester** | Same defect pattern found 3+ times across different components | Pattern description and affected areas |
-| **vulnerability-tester** | Architectural security flaw found | Pattern analysis, affected components, redesign recommendation |
 | **ux-reviewer** | Fundamental navigation/IA issue requiring structural change | UX findings that need architectural support |
 
 ### Output: What You Hand Off
@@ -469,7 +468,6 @@ This skill operates at the design layer -- receiving requirements from product-m
 | **tech-lead** | Architecture designed, ready for implementation planning | Component map, API contracts, data models, ADRs, and implementation constraints |
 | **product-manager** | Design reveals requirement adjustments needed | Technical constraints that affect scope, with alternatives |
 | **qa-tester** | Architecture defines testable boundaries | Component contracts and integration points to validate |
-| **vulnerability-tester** | Architecture defines security boundaries | Auth model, data flow, component boundaries, security-relevant decisions |
 
 ### Inter-Skill Communication Protocol
 
@@ -490,7 +488,6 @@ HAND OFF TO PIPELINE
   +-- To ui-designer: Tech stack, framework, design handoff notes
   +-- To tech-lead: Component map, API contracts, implementation plan
   +-- To qa-tester: Testable boundaries, component contracts
-  +-- To vulnerability-tester: Security boundaries, auth model
   +-- To product-manager: Scope adjustments (if any)
   |
   v
@@ -507,11 +504,6 @@ RECEIVE ESCALATIONS
   |     -> Identify the architectural root cause
   |     -> Design structural fix that eliminates the category
   |     -> Issue ADR documenting the change
-  |
-  +-- From Vulnerability Tester: "Architectural security flaw"
-  |     -> Review security evidence
-  |     -> Redesign affected component boundaries
-  |     -> Update ADR and notify tech-lead
   |
   +-- From UX Reviewer: "Structural UX issue"
   |     -> Assess if architecture change is needed
@@ -533,4 +525,3 @@ Proactively review architecture when:
 - Performance or scalability requirements change by an order of magnitude
 - A new integration point is introduced
 - The team is about to make a decision that is expensive to reverse
-- Vulnerability tester finds a systemic security flaw

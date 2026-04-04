@@ -173,7 +173,7 @@ Objective quality checks independent of spec:
 
 ### Dimension 5: Security Quick Check
 
-Not a replacement for vulnerability-tester, but catch obvious issues:
+Catch obvious security issues during review:
 
 | Check | What to Verify |
 |-------|----------------|
@@ -344,7 +344,6 @@ Phase 7: Vulnerability Testing
 | **product-manager** | Spec drift found -- unclear if code or spec is wrong | Drift description, both interpretations, recommendation |
 | **product-architect** | Architecture violations found | Violation details with ADR reference |
 | **ui-designer** | Design system drift found | Token/component mismatches with spec references |
-| **vulnerability-tester** | Security concerns found during review | Security findings for deeper analysis |
 
 ### Inter-Skill Communication Protocol
 

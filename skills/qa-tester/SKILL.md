@@ -129,7 +129,7 @@ Wait for user approval before starting the QA pass.
 - Assessing interrupted or out-of-order user interactions
 - Evaluating state management across views or components
 
-**When NOT to use:** Performance profiling (use performance-analyst), security penetration testing (use vulnerability-tester), UX evaluation (use ux-reviewer), system architecture (use product-architect).
+**When NOT to use:** Performance profiling (use performance-tester), UX evaluation (use ux-reviewer), system architecture (use product-architect).
 
 ## Testing Framework
 
@@ -330,7 +330,6 @@ VERIFICATION REPORT
 | **tech-lead** | Bugs found that need triage and fixing | Full bug reports with severity, evidence, and suggested resolution |
 | **product-manager** | Ambiguous requirements causing defects | Specific ambiguity, both interpretations, and the risk each carries |
 | **product-architect** | Recurring defect category (3+ related bugs) | Pattern description, affected components, and why patches are insufficient |
-| **vulnerability-tester** | Security-related bug found during functional testing | Security finding with evidence, for deeper security analysis |
 | **ux-reviewer** | UI coherence issues suggest deeper UX problems | UX-related findings for comprehensive usability evaluation |
 | **ui-designer** | Visual inconsistencies suggest design system gaps | Visual findings needing design system updates |
 
@@ -355,10 +354,6 @@ QA PASS COMPLETE (this skill)
   |      A: [interpretation]. B: [interpretation].
   |      Risk if A: [impact]. Risk if B: [impact].
   |      Please clarify intended behavior."
-  |
-  +-- Security concern -> vulnerability-tester
-  |     "Potential security issue found during functional testing:
-  |      [description]. Needs deeper security analysis."
   |
   +-- UX concern -> ux-reviewer
   |     "UI coherence issues suggest deeper UX problem:

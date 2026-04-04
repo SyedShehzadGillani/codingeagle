@@ -30,7 +30,6 @@ Format: `[skill-tag](scope): description`
 | tech-lead | `fix` | `fix(auth): resolve session expiry race condition` |
 | qa-tester | `qa` | `qa: add test coverage for login edge cases` |
 | code-reviewer | `review` | `review: address spec drift in user profile endpoint` |
-| vulnerability-tester | `security` | `security: remediate XSS in profile page` |
 | performance-tester | `perf` | `perf: add database index for orders query` |
 | ux-reviewer | `ux` | `ux: improve error messages and loading states` |
 | propose | `feat` | `feat: complete user authentication system` |
@@ -47,7 +46,6 @@ Format: `[skill-tag](scope): description`
 | tech-lead | After each fix is implemented and tested |
 | qa-tester | After QA report is written (does not commit code fixes -- tech-lead does) |
 | code-reviewer | After review report is written (does not commit fixes -- tech-lead does) |
-| vulnerability-tester | After security report written AND after each security fix |
 | performance-tester | After performance report written AND after each optimization |
 | ux-reviewer | After UX report written AND after each UX improvement |
 | propose | Delegates to active role's commit trigger |

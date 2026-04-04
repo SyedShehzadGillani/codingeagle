@@ -134,7 +134,7 @@ Wait for user approval before proceeding.
 - Breaking complex remediation into actionable tasks
 - Evaluating trade-offs between speed of fix and long-term maintainability
 
-**When NOT to use:** Initial feature development (use default Claude), system architecture design (use product-architect), UI design (use ui-designer), product prioritization (use product-manager), security testing (use vulnerability-tester), UX evaluation (use ux-reviewer).
+**When NOT to use:** Initial feature development (use default Claude), system architecture design (use product-architect), UI design (use ui-designer), product prioritization (use product-manager), UX evaluation (use ux-reviewer).
 
 ## Triage Framework
 
@@ -178,7 +178,7 @@ Before writing a single line of fix code, answer these five questions:
 | Integration gap | API contract mismatch, schema drift | Contract test + fix |
 | Spec ambiguity | Requirement interpreted two ways | Clarify spec, then fix |
 | Design flaw | Architecture doesn't support the use case | Refactor or redesign |
-| Security flaw | Vulnerability in logic or configuration | Security fix + vulnerability-tester re-verify |
+| Security flaw | Vulnerability in logic or configuration | Security fix + verify |
 
 ### Step 3: Choose Remediation Strategy
 
@@ -341,7 +341,6 @@ This skill sits between QA discovery and QA re-verification. You receive finding
 | **qa-tester** | Bugs found during QA pass | Structured bug reports with severity, steps to reproduce, expected vs. actual behavior, and business impact |
 | **product-manager** | Priority overrides, requirement clarifications | Scope decisions on whether to fix now or defer, requirement interpretations |
 | **product-architect** | Architectural guidance when root-cause is design-level | Revised architecture, updated ADRs, implementation guidance |
-| **vulnerability-tester** | Security vulnerabilities needing code fixes | Vulnerability reports with severity, evidence, fix code, and verification steps |
 | **ux-reviewer** | UX issues requiring code changes | UX findings with implementation guidance for code-level fixes |
 | **ui-designer** | Design spec is technically infeasible | Alternative design proposals that need implementation assessment |
 
@@ -352,13 +351,12 @@ This skill sits between QA discovery and QA re-verification. You receive finding
 | **qa-tester** | Fix implemented and ready for re-verification | Resolution report with exact re-test instructions |
 | **product-architect** | Root cause is a design flaw, or same defect category appears 3+ times | Root-cause analysis, affected components, why targeted fixes are insufficient |
 | **product-manager** | Ambiguous spec causing the defect, or fix requires scope change | The ambiguity, both interpretations, and recommendation |
-| **vulnerability-tester** | Security-related fix implemented, needs security re-verification | Fixed vulnerability details, verification needed |
 | **ui-designer** | Design spec technically infeasible | What's impossible and proposed alternatives |
 
 ### Inter-Skill Communication Protocol
 
 ```
-RECEIVE FINDINGS (from qa-tester / vulnerability-tester / ux-reviewer)
+RECEIVE FINDINGS (from qa-tester / ux-reviewer / code-reviewer)
   |
   v
 DIAGNOSTIC DISCOVERY (this skill)
@@ -380,9 +378,6 @@ TRIAGE & ROOT-CAUSE ANALYSIS
   |       "Requirement [X] is ambiguous: [two interpretations].
   |        This caused [bug]. Recommend: [interpretation + why]."
   |
-  +-- Security flaw detected?
-  |     YES -> Flag for vulnerability-tester re-verification after fix
-  |
   v
 IMPLEMENT FIX
   |  1. Choose strategy: patch / refactor / extract shared logic
@@ -399,7 +394,6 @@ RESOLUTION REPORT
 HAND BACK TO PIPELINE
   |
   +-- To qa-tester: Resolution report with re-test instructions
-  +-- To vulnerability-tester: Security fix re-verification (if applicable)
   +-- To product-architect: Escalation (if design flaw)
   +-- To product-manager: Clarification request (if spec ambiguity)
 ```
@@ -411,7 +405,6 @@ HAND BACK TO PIPELINE
 | **product-architect** | Root cause is a design flaw, or same defect category appears 3+ times | Root-cause analysis, affected components, why targeted fixes are insufficient |
 | **product-manager** | Ambiguous spec causing the defect, or fix requires scope change | The ambiguity, both interpretations, and recommendation |
 | **qa-tester** | Fix implemented and ready for re-verification | Resolution report with exact re-test instructions |
-| **vulnerability-tester** | Security fix needs verification | Security fix details and verification steps |
 
 ### Quality Gates
 
@@ -423,4 +416,4 @@ Before handing any fix back to QA, verify:
 - [ ] Existing test suite passes with no new failures
 - [ ] Resolution report completed with re-verification instructions
 - [ ] Adjacent code checked for the same flawed pattern
-- [ ] Security implications considered (flag for vulnerability-tester if relevant)
+- [ ] Security implications considered
