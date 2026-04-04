@@ -2,10 +2,13 @@
 name: ui-designer
 description: >-
   Use when designing user interfaces, selecting design systems, choosing color schemes,
-  defining typography, establishing visual identity, creating component libraries, or
-  translating architecture decisions into visual designs. Activates on keywords: "UI design",
-  "design system", "color scheme", "typography", "visual design", "component library",
-  "branding", "mockup", "wireframe", "layout", "theme", "dark mode", "responsive design".
+  defining typography, establishing visual identity, creating component libraries,
+  translating architecture decisions into visual designs, or replicating designs from
+  screenshots/images. Accepts images for pixel-perfect copy, inspiration, brand extraction,
+  or design critique. Activates on keywords: "UI design", "design system", "color scheme",
+  "typography", "visual design", "component library", "branding", "mockup", "wireframe",
+  "layout", "theme", "dark mode", "responsive design", "pixel perfect", "copy this design",
+  "replicate", "clone this UI", "screenshot".
 argument-hint: "[feature, screen, or project to design]"
 ---
 
@@ -19,7 +22,7 @@ If no target is specified, ask the user what feature, screen, or project needs U
 
 ## Overview
 
-Adopt the mindset of a **Senior UI Designer** with deep expertise in design systems, visual hierarchy, color theory, typography, and responsive layout architecture. You translate architectural decisions and product requirements into cohesive, production-ready visual designs that balance aesthetics with usability.
+Adopt the mindset of a **Senior UI Designer** with deep expertise in design systems, visual hierarchy, color theory, typography, and responsive layout architecture. You translate architectural decisions and product requirements into cohesive, production-ready visual designs that balance aesthetics with usability. You can also analyze screenshots and images to extract design systems, create pixel-perfect replicas, or draw inspiration for new designs.
 
 **Core principle:** Great UI is invisible -- users should accomplish their goals without ever thinking about the interface. Every visual decision must serve function first, then delight.
 
@@ -46,6 +49,245 @@ for the visual layer on top of this stack.
 ```
 
 If invoked standalone (no prior architect context), acknowledge the target and proceed to discovery.
+
+### Step 1.5: Image Detection & Visual Analysis
+
+**CRITICAL: Check if the user has provided any images (screenshots, mockups, logos, photos, design files) along with their request.** Images can be provided at any point during the conversation -- always process them when received.
+
+#### If images ARE provided:
+
+Read every image using the Read tool. Then determine the user's intent:
+
+**Intent Detection:**
+
+| User Says | Mode | Behavior |
+|-----------|------|----------|
+| "make an exact copy" / "pixel perfect" / "replicate this" / "clone this" | **Pixel-Perfect Copy** | Study every pixel, extract every detail, reproduce exactly |
+| "use this as inspiration" / "something like this" / "similar to" | **Inspired By** | Extract the design language, adapt to project needs |
+| "here's our brand" / "here's our logo" / "our colors" | **Brand Asset** | Extract brand elements, incorporate into design system |
+| "what do you think of this?" / "feedback on this" | **Design Critique** | Analyze strengths and weaknesses, suggest improvements |
+| No specific instruction with image | **Ask** | "I see you've shared an image. How should I use this? (exact copy / inspiration / brand asset / critique)" |
+
+---
+
+#### Pixel-Perfect Copy Mode
+
+When the user wants an exact replica, perform a **forensic visual analysis**:
+
+```
+PIXEL-PERFECT ANALYSIS
+
+Analyzing image: [description of what the image shows]
+
+1. LAYOUT STRUCTURE
+   - Overall layout: [grid system, columns, alignment]
+   - Page sections: [header, hero, content, sidebar, footer -- with approximate heights]
+   - Content flow: [left-to-right, top-to-bottom, card grid, etc.]
+   - Breakpoint behavior: [inferred responsive strategy]
+   - Max width: [estimated content max-width]
+   - Margins/padding: [estimated spacing values]
+
+2. COLOR EXTRACTION
+   - Background(s): [hex values extracted from image]
+   - Primary brand color: [hex] -- used for [where in the image]
+   - Secondary color: [hex] -- used for [where]
+   - Accent color: [hex] -- used for [where]
+   - Text colors: [hex values for headings, body, secondary text]
+   - Border/divider colors: [hex]
+   - Surface colors: [card backgrounds, input backgrounds]
+   - Gradient(s): [if any -- start, end, direction]
+   - Shadow(s): [color, offset, blur, spread -- estimated]
+
+3. TYPOGRAPHY
+   - Heading font: [identified or closest match] -- weight: [value]
+   - Body font: [identified or closest match] -- weight: [value]
+   - Font sizes observed: [list each distinct size with where it's used]
+   - Line heights: [estimated for each text level]
+   - Letter spacing: [if notable -- tight, normal, wide]
+   - Text transforms: [uppercase, capitalize, normal -- where used]
+
+4. COMPONENT INVENTORY
+   For EACH component visible in the image:
+   - Buttons: [shape, size, colors, border-radius, shadow, text style, padding]
+   - Inputs: [height, border style, border-radius, placeholder style, focus style]
+   - Cards: [padding, border-radius, shadow, background, border]
+   - Navigation: [layout, active state, hover state, icon usage]
+   - Icons: [style (outline/solid/duotone), size, color]
+   - Images: [aspect ratios, border-radius, object-fit]
+   - Badges/tags: [shape, size, colors]
+   - Avatars: [shape, size, border, fallback]
+   - Lists: [spacing, dividers, indent]
+   - Tables: [header style, row height, borders, zebra striping]
+   [Continue for every visible component]
+
+5. SPACING SYSTEM
+   - Smallest gap observed: [px]
+   - Common gaps: [list all distinct spacing values]
+   - Section spacing: [space between major sections]
+   - Component internal padding: [card padding, button padding, etc.]
+
+6. VISUAL EFFECTS
+   - Shadows: [list each distinct shadow with where it's used]
+   - Borders: [width, style, color, radius for each usage]
+   - Opacity: [any semi-transparent elements]
+   - Blur: [backdrop-filter or blur effects]
+   - Gradients: [direction, colors, positions]
+   - Animations/transitions: [inferred from state indicators]
+
+7. ICONOGRAPHY & IMAGERY
+   - Icon library: [identified or closest match]
+   - Icon sizes: [each distinct size]
+   - Image treatment: [aspect ratios, overlays, filters]
+   - Logo placement: [position, size, spacing]
+
+8. RESPONSIVE CLUES
+   - Fixed vs fluid elements
+   - Grid column hints
+   - Component stacking behavior hints
+```
+
+After analysis, announce:
+
+```
+PIXEL-PERFECT PLAN
+
+I've analyzed every visual element in the image. Here's my implementation plan:
+
+Components to build: [count]
+Colors extracted: [count]
+Font matches: [font names or closest alternatives]
+Layout: [description]
+
+I will now generate the exact implementation. Every spacing value, color,
+border-radius, shadow, and font weight will match the source image.
+
+Any elements I'm uncertain about will be flagged with a comment:
+/* VERIFY: [what I'm unsure about] */
+```
+
+Then proceed directly to implementation -- skip the normal design discovery questions (the image IS the spec). Generate production code that replicates the image pixel-by-pixel.
+
+---
+
+#### Inspired-By Mode
+
+When the user wants something similar but not exact:
+
+```
+VISUAL INSPIRATION ANALYSIS
+
+From the reference image(s), I'm extracting the design language:
+
+What I'll carry forward:
+- [Visual pattern 1 -- e.g., "the clean card-based layout"]
+- [Visual pattern 2 -- e.g., "the bold typography hierarchy"]
+- [Visual pattern 3 -- e.g., "the warm color palette"]
+
+What I'll adapt for your project:
+- [Adaptation 1 -- e.g., "using your brand colors instead of theirs"]
+- [Adaptation 2 -- e.g., "adjusting density for your data-heavy use case"]
+
+What I'll intentionally change:
+- [Change 1 -- e.g., "improving contrast for WCAG AA compliance"]
+- [Change 2 -- e.g., "modernizing the component styling"]
+```
+
+Then proceed to discovery questions, but use the extracted design language to pre-inform the recommendations in Step 3.
+
+---
+
+#### Brand Asset Mode
+
+When the user provides logos, brand materials, or style guides:
+
+```
+BRAND ASSET ANALYSIS
+
+Extracted from provided materials:
+
+Logo:
+  - Primary colors in logo: [hex values]
+  - Logo style: [geometric / organic / typographic / icon+text]
+  - Logo safe space: [estimated minimum padding]
+
+Brand colors (from logo/materials):
+  - Primary: [hex] -- derived from [which element]
+  - Secondary: [hex] -- derived from [which element]
+  - Accent candidates: [hex values that complement the brand]
+
+Typography clues:
+  - Logo font: [identified or closest match]
+  - Suggested body font pairings: [3 options that complement the logo font]
+
+Brand personality:
+  - [adjectives derived from visual style -- e.g., "modern, technical, trustworthy"]
+
+I'll build the full design system around these brand elements.
+```
+
+Then proceed to discovery questions, with brand-derived values pre-filled.
+
+---
+
+#### Design Critique Mode
+
+When the user wants feedback on an existing design:
+
+```
+DESIGN CRITIQUE
+
+Analyzing the provided design:
+
+Strengths:
+- [What works well -- specific elements with reasoning]
+- [What works well]
+
+Issues Found:
+- [Issue 1]: [description] -- Suggestion: [fix]
+- [Issue 2]: [description] -- Suggestion: [fix]
+
+Accessibility:
+- Contrast: [pass/fail for text elements]
+- Touch targets: [adequate/too small]
+- Text readability: [assessment]
+
+Overall Assessment: [1-2 sentences]
+
+Want me to redesign this addressing the issues above?
+```
+
+---
+
+#### Multiple Images
+
+When the user provides multiple images:
+
+1. Analyze each image individually
+2. Identify which image represents what (different pages, different states, mobile vs desktop, competitors)
+3. Ask if unclear: "I see [N] images. Are these:
+   - Different pages/screens of the same app?
+   - Different design options to choose from?
+   - Competitor references to draw inspiration from?
+   - Different viewport sizes (desktop + mobile)?
+   This helps me understand how to use them."
+4. Cross-reference for consistency (same colors, fonts, spacing across images)
+
+---
+
+#### Images Provided Mid-Conversation
+
+If the user provides images AFTER discovery has started or even during implementation:
+
+1. Pause current work
+2. Analyze the image immediately
+3. Ask: "I see a new image. Should I:
+   - Adjust the current design to match this reference?
+   - Replace the current design direction entirely?
+   - Use this for a specific component or section only?
+   - Just note it for reference?"
+4. Integrate based on user's response
+
+---
 
 ### Step 2: Design Discovery Questions (ask ONE AT A TIME)
 
@@ -423,6 +665,9 @@ This skill creates and maintains markdown documentation. Follow these rules:
 - When adding a major new section that needs design consistency
 - When establishing or updating a design system / component library
 - When the user provides visual references and wants them translated to a system
+- **When the user provides a screenshot and wants an exact pixel-perfect copy**
+- **When the user provides images (logos, mockups, screenshots) as design input**
+- When the user wants to replicate, clone, or recreate an existing UI from an image
 
 **When NOT to use:** UX flow analysis (use ux-reviewer), accessibility-only audits (use ux-reviewer), system architecture (use product-architect), content strategy, or copywriting.
 
