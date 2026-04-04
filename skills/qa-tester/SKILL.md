@@ -122,114 +122,158 @@ Wait for user approval before starting the QA pass.
 
 ---
 
-## Visual UI Testing (Computer Use)
+## Visual UI Testing (Chrome MCP)
 
-When the user asks for **visual/UI testing** (e.g., "test the UI", "check how it looks", "visual regression", "test in the browser"), activate computer-use MCP to interact with the actual running application.
+When the user asks for **visual/UI testing** (e.g., "test the UI", "check how it looks", "visual regression", "test in the browser"), use the **Chrome MCP** (`mcp__browser-tools__*`) to interact with the user's actual Chrome browser and test the running application.
 
 ### When to Activate
 
-| User Says | Activate Computer Use? |
-|-----------|----------------------|
+| User Says | Activate Chrome MCP? |
+|-----------|---------------------|
 | "test the UI" / "check how it looks" / "visual test" | **YES** |
 | "test the login flow in the browser" | **YES** |
 | "check if the button works" / "click through the app" | **YES** |
 | "test the API" / "check the logic" / "review the code" | **NO** (code-level testing only) |
 | No mention of UI/visual/browser | **NO** (default to code-level testing) |
 
-### How to Use Computer Use MCP
+### Prerequisites
 
-When visual UI testing is activated:
+Chrome MCP connects to the user's running Chrome browser via the browser-tools extension. Before testing:
 
-1. **Ensure the app is running.** If not, ask the user to start it or start it yourself:
+1. **Ensure the app is running.** If not, start it:
    ```
    The app needs to be running for visual testing.
    Starting: [detected start command -- npm run dev / python manage.py runserver / etc.]
    URL: [http://localhost:PORT]
    ```
 
-2. **Take screenshots** to visually verify UI state:
-   - Use `mcp__browser-tools__takeScreenshot` to capture the current page state
-   - Use `mcp__puppeteer__puppeteer_screenshot` for headless browser screenshots
-   - Use `mcp__puppeteer__puppeteer_navigate` to navigate to specific pages
+2. **Ensure Chrome is open** with the app loaded. Ask user to open the URL if needed:
+   ```
+   Please open [URL] in Chrome with the browser-tools extension active.
+   I'll connect via Chrome MCP to test the UI.
+   ```
 
-3. **Interact with the UI** to test user flows:
-   - Use `mcp__puppeteer__puppeteer_click` to click buttons, links, and interactive elements
-   - Use `mcp__puppeteer__puppeteer_fill` to type into form fields
-   - Use `mcp__puppeteer__puppeteer_select` to select dropdown options
-   - Use `mcp__puppeteer__puppeteer_hover` to test hover states
-   - Use `mcp__puppeteer__puppeteer_evaluate` to run JavaScript assertions in the browser
+### Chrome MCP Tools
 
-4. **Audit the page** for quality:
-   - Use `mcp__browser-tools__runAccessibilityAudit` for WCAG compliance
-   - Use `mcp__browser-tools__runPerformanceAudit` for page performance
-   - Use `mcp__browser-tools__runBestPracticesAudit` for best practices
-   - Use `mcp__browser-tools__runSEOAudit` for SEO if applicable
-   - Use `mcp__browser-tools__getConsoleErrors` to check for JavaScript errors
-   - Use `mcp__browser-tools__getNetworkErrors` to check for failed requests
+#### Observation (read the browser state)
 
-5. **Check element details**:
-   - Use `mcp__browser-tools__getSelectedElement` to inspect specific elements
-   - Verify colors, fonts, spacing match the design system
+| Tool | Use For |
+|------|---------|
+| `mcp__browser-tools__takeScreenshot` | Capture current page state as visual evidence |
+| `mcp__browser-tools__getConsoleErrors` | Check for JavaScript errors |
+| `mcp__browser-tools__getConsoleLogs` | Read console output for warnings or debug info |
+| `mcp__browser-tools__getNetworkErrors` | Check for failed API calls or 404s |
+| `mcp__browser-tools__getNetworkLogs` | Review all network requests and responses |
+| `mcp__browser-tools__getSelectedElement` | Inspect a specific DOM element (styles, attributes, computed values) |
+
+#### Auditing (automated quality checks)
+
+| Tool | Use For |
+|------|---------|
+| `mcp__browser-tools__runAccessibilityAudit` | WCAG compliance check (color contrast, ARIA, labels, focus) |
+| `mcp__browser-tools__runPerformanceAudit` | Core Web Vitals, load performance, render metrics |
+| `mcp__browser-tools__runBestPracticesAudit` | Browser best practices (HTTPS, no deprecated APIs, etc.) |
+| `mcp__browser-tools__runSEOAudit` | SEO checks (meta tags, headings, crawlability) |
+| `mcp__browser-tools__runNextJSAudit` | Next.js-specific checks (if applicable) |
+
+#### Advanced
+
+| Tool | Use For |
+|------|---------|
+| `mcp__browser-tools__runAuditMode` | Full comprehensive audit across all categories |
+| `mcp__browser-tools__runDebuggerMode` | Deep debugging session with console + network + element inspection |
+| `mcp__browser-tools__wipeLogs` | Clear accumulated logs before a fresh test run |
 
 ### Visual Test Flow
 
 ```
-VISUAL UI TESTING
+VISUAL UI TESTING (via Chrome MCP)
 
-1. Navigate to [URL]
-   → Screenshot: [capture initial state]
-   → Console errors: [check for JS errors]
-   → Network errors: [check for failed requests]
+1. Wipe logs for clean baseline
+   → mcp__browser-tools__wipeLogs
 
-2. Test user flow: [flow name]
-   → Action: [click/type/select]
-   → Screenshot: [capture result]
+2. Take initial screenshot
+   → mcp__browser-tools__takeScreenshot
+   → Document: page layout, visible elements, initial state
+
+3. Check for errors on load
+   → mcp__browser-tools__getConsoleErrors -- any JS errors?
+   → mcp__browser-tools__getNetworkErrors -- any failed requests?
+
+4. Test user flow: [flow name]
+   → User performs action in Chrome (or describe action for user to perform)
+   → mcp__browser-tools__takeScreenshot -- capture result
+   → mcp__browser-tools__getConsoleErrors -- new errors after action?
    → Expected: [what should happen]
-   → Actual: [what happened]
+   → Actual: [what the screenshot shows]
    → Status: [PASS/FAIL]
 
-3. Accessibility audit
-   → Run automated WCAG check
-   → Findings: [list]
-
-4. Visual consistency check
+5. Inspect specific elements
+   → User selects element in Chrome DevTools
+   → mcp__browser-tools__getSelectedElement -- verify styles, attributes
    → Compare against design system tokens
-   → Flag any hardcoded values or mismatched styles
 
-5. Responsive check (if applicable)
-   → Resize viewport to mobile/tablet
-   → Screenshot at each breakpoint
-   → Flag layout issues
+6. Run automated audits
+   → mcp__browser-tools__runAccessibilityAudit -- WCAG compliance
+   → mcp__browser-tools__runPerformanceAudit -- Core Web Vitals
+   → mcp__browser-tools__runBestPracticesAudit -- browser best practices
+   → Document all findings
+
+7. Network analysis
+   → mcp__browser-tools__getNetworkLogs -- review API calls
+   → Check: correct endpoints hit, response codes, payload sizes
+   → Flag: slow requests, failed calls, unnecessary requests
 ```
+
+### Collaborative Testing Pattern
+
+Chrome MCP reads the browser state but the **user drives the interactions** (clicking, typing, navigating). The testing flow is collaborative:
+
+```
+QA: "Please navigate to /dashboard and click the 'Create Project' button."
+     [user clicks]
+QA: [takes screenshot, checks console, inspects result]
+QA: "Now fill in the project name field with 'Test Project' and submit."
+     [user fills and submits]
+QA: [takes screenshot, checks for errors, verifies success state]
+```
+
+For each step:
+1. Tell the user what action to perform
+2. After they confirm, capture and analyze the browser state
+3. Report pass/fail with evidence
 
 ### Visual Bug Report Format
 
 ```
 ## [VBUG-ID] Visual Issue Title
 
-**Type:** Visual regression | Layout break | Interaction failure | Accessibility | Console error
+**Type:** Visual regression | Layout break | Interaction failure | Accessibility | Console error | Network error
 **Page:** [URL]
-**Viewport:** [width x height]
-**Screenshot:** [taken via computer-use]
+**Viewport:** [detected from screenshot]
+**Screenshot:** [captured via Chrome MCP]
 
 **Steps to Reproduce:**
 1. Navigate to [URL]
-2. [Action taken via computer-use]
+2. [Action performed by user]
 3. [Observe visual issue]
 
 **Expected:** [what design system specifies]
-**Actual:** [what appears on screen]
-**Console Errors:** [if any]
+**Actual:** [what the screenshot/audit shows]
+**Console Errors:** [from getConsoleErrors]
+**Network Errors:** [from getNetworkErrors]
+**Accessibility Findings:** [from accessibility audit]
 
 **Suggested Fix:** [CSS/component change]
 ```
 
-### When NOT to Use Computer Use
+### When NOT to Use Chrome MCP
 
 - **Code-only QA** (logic, edge cases, state management) -- use code-level testing
 - **API testing** -- use code-level testing
 - **Unit test review** -- use code-level testing
-- **If the app isn't runnable** -- fall back to code-level UI coherence audit
+- **If Chrome isn't available** -- fall back to code-level UI coherence audit
+- **Automated CI/CD testing** -- Chrome MCP requires a live browser session
 
 ---
 
