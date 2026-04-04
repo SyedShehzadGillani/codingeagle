@@ -120,6 +120,119 @@ Proceed with this plan? (Any flows to add or remove?)
 
 Wait for user approval before starting the QA pass.
 
+---
+
+## Visual UI Testing (Computer Use)
+
+When the user asks for **visual/UI testing** (e.g., "test the UI", "check how it looks", "visual regression", "test in the browser"), activate computer-use MCP to interact with the actual running application.
+
+### When to Activate
+
+| User Says | Activate Computer Use? |
+|-----------|----------------------|
+| "test the UI" / "check how it looks" / "visual test" | **YES** |
+| "test the login flow in the browser" | **YES** |
+| "check if the button works" / "click through the app" | **YES** |
+| "test the API" / "check the logic" / "review the code" | **NO** (code-level testing only) |
+| No mention of UI/visual/browser | **NO** (default to code-level testing) |
+
+### How to Use Computer Use MCP
+
+When visual UI testing is activated:
+
+1. **Ensure the app is running.** If not, ask the user to start it or start it yourself:
+   ```
+   The app needs to be running for visual testing.
+   Starting: [detected start command -- npm run dev / python manage.py runserver / etc.]
+   URL: [http://localhost:PORT]
+   ```
+
+2. **Take screenshots** to visually verify UI state:
+   - Use `mcp__browser-tools__takeScreenshot` to capture the current page state
+   - Use `mcp__puppeteer__puppeteer_screenshot` for headless browser screenshots
+   - Use `mcp__puppeteer__puppeteer_navigate` to navigate to specific pages
+
+3. **Interact with the UI** to test user flows:
+   - Use `mcp__puppeteer__puppeteer_click` to click buttons, links, and interactive elements
+   - Use `mcp__puppeteer__puppeteer_fill` to type into form fields
+   - Use `mcp__puppeteer__puppeteer_select` to select dropdown options
+   - Use `mcp__puppeteer__puppeteer_hover` to test hover states
+   - Use `mcp__puppeteer__puppeteer_evaluate` to run JavaScript assertions in the browser
+
+4. **Audit the page** for quality:
+   - Use `mcp__browser-tools__runAccessibilityAudit` for WCAG compliance
+   - Use `mcp__browser-tools__runPerformanceAudit` for page performance
+   - Use `mcp__browser-tools__runBestPracticesAudit` for best practices
+   - Use `mcp__browser-tools__runSEOAudit` for SEO if applicable
+   - Use `mcp__browser-tools__getConsoleErrors` to check for JavaScript errors
+   - Use `mcp__browser-tools__getNetworkErrors` to check for failed requests
+
+5. **Check element details**:
+   - Use `mcp__browser-tools__getSelectedElement` to inspect specific elements
+   - Verify colors, fonts, spacing match the design system
+
+### Visual Test Flow
+
+```
+VISUAL UI TESTING
+
+1. Navigate to [URL]
+   → Screenshot: [capture initial state]
+   → Console errors: [check for JS errors]
+   → Network errors: [check for failed requests]
+
+2. Test user flow: [flow name]
+   → Action: [click/type/select]
+   → Screenshot: [capture result]
+   → Expected: [what should happen]
+   → Actual: [what happened]
+   → Status: [PASS/FAIL]
+
+3. Accessibility audit
+   → Run automated WCAG check
+   → Findings: [list]
+
+4. Visual consistency check
+   → Compare against design system tokens
+   → Flag any hardcoded values or mismatched styles
+
+5. Responsive check (if applicable)
+   → Resize viewport to mobile/tablet
+   → Screenshot at each breakpoint
+   → Flag layout issues
+```
+
+### Visual Bug Report Format
+
+```
+## [VBUG-ID] Visual Issue Title
+
+**Type:** Visual regression | Layout break | Interaction failure | Accessibility | Console error
+**Page:** [URL]
+**Viewport:** [width x height]
+**Screenshot:** [taken via computer-use]
+
+**Steps to Reproduce:**
+1. Navigate to [URL]
+2. [Action taken via computer-use]
+3. [Observe visual issue]
+
+**Expected:** [what design system specifies]
+**Actual:** [what appears on screen]
+**Console Errors:** [if any]
+
+**Suggested Fix:** [CSS/component change]
+```
+
+### When NOT to Use Computer Use
+
+- **Code-only QA** (logic, edge cases, state management) -- use code-level testing
+- **API testing** -- use code-level testing
+- **Unit test review** -- use code-level testing
+- **If the app isn't runnable** -- fall back to code-level UI coherence audit
+
+---
+
 ## When to Use
 
 - Reviewing feature implementations for functional correctness
