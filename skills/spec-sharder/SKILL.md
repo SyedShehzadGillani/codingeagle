@@ -322,9 +322,30 @@ Parallel opportunities:
 
 ---
 
-## Post-Output Guidance
+## Post-Output Guidance & Execution Modes
 
-After generating the structured output, present actionable next steps:
+After generating the structured output, analyze the dependency graph and present execution options:
+
+### Parallel Analysis
+
+Before presenting options, compute which items can run in parallel:
+
+```
+PARALLEL ANALYSIS
+
+Dependency graph:
+  Independent (no dependencies): [list item IDs]
+  Wave 1 (after foundation):     [list item IDs]
+  Wave 2 (after wave 1):         [list item IDs]
+  Sequential only (deep chain):  [list item IDs]
+
+Max parallelism: [N] items can run simultaneously
+Estimated waves: [N] sequential waves to complete everything
+```
+
+### Execution Options
+
+Present all available execution strategies:
 
 ```
 SHARD COMPLETE
@@ -333,21 +354,237 @@ Output: [file path(s) created/updated]
 Items: [N] total ([N] P0, [N] P1, [N] P2, [N] P3)
 Estimated scope: [S/M/L/XL overall]
 
-Recommended execution order:
-1. `/propose [P0 item 1 description]` -- [why first]
-2. `/propose [P0 item 2 description]` -- [why second]
-3. [...]
+═══════════════════════════════════════════════════
+EXECUTION OPTIONS
+═══════════════════════════════════════════════════
 
-Or run the full pipeline in auto mode:
-  `/propose [project name]` with the shard document as context
+1. SEQUENTIAL (safest, most control)
+   Run each item one at a time via /propose:
+   → /propose [P0 item 1] -- then /propose [P0 item 2] -- etc.
+   You approve each step. Best for: learning the codebase, critical features.
 
-You can also:
-- Edit the shard document to adjust priorities or add items
-- Run `/spec-sharder` again with new points to merge into this shard
-- Pick individual items to `/propose` in any order you prefer
+2. BATCH EXECUTE (fastest, parallel agents)
+   Spawn [N] parallel agents in isolated worktrees:
+   → Wave 1: [N] agents for independent items (no dependencies)
+   → Wave 2: [N] agents after Wave 1 merges (items depending on Wave 1)
+   → Wave 3: [N] agents after Wave 2 merges
+   Each agent opens its own PR. Best for: large projects, independent features.
 
-The shard document will be updated as items are completed.
+3. AUTO MODE (hands-off pipeline)
+   Run /propose in auto mode -- all phases execute without approval gates:
+   → Sequential execution but no user gates between phases
+   Best for: trusted pipeline, experienced users.
+
+4. PICK AND CHOOSE (manual selection)
+   Select specific items to execute in any order.
+   Best for: partial implementation, iterative building.
+
+5. HYBRID (recommended for most projects)
+   → Foundation items: sequential (careful, one at a time)
+   → Independent features: batch (parallel agents)
+   → Integration items: sequential (need full context)
+   Best for: balanced speed and safety.
+
+Which mode? (1-5, or describe your preference)
 ```
+
+---
+
+## Batch Execution System
+
+When the user selects **Batch Execute** or **Hybrid** mode:
+
+### Step 1: Compute Execution Waves
+
+Analyze the dependency graph to determine which items can run in parallel:
+
+```
+BATCH EXECUTION PLAN
+
+Wave 0: Foundation (sequential -- must complete before anything else)
+  ├── Item 1.1: [title] -- [complexity] -- [why sequential]
+  └── Item 1.2: [title] -- [complexity] -- [why sequential]
+
+Wave 1: First parallel batch ([N] agents)
+  ├── Agent 1 → Item 2.1: [title] -- [complexity]
+  ├── Agent 2 → Item 3.1: [title] -- [complexity]
+  └── Agent 3 → Item 5.1: [title] -- [complexity]
+  Parallel because: no dependencies between these items
+
+Wave 2: Second parallel batch ([N] agents, after Wave 1 merges)
+  ├── Agent 1 → Item 2.2: [title] -- depends on 2.1
+  └── Agent 2 → Item 4.1: [title] -- depends on 3.1
+  Parallel because: dependencies are on different Wave 1 items
+
+Wave 3: Integration (sequential -- needs full context)
+  └── Item 6.1: [title] -- depends on 2.2 + 4.1
+
+Total: [N] waves, [N] parallel agents max, [N] PRs expected
+```
+
+### Step 2: Agent Briefing
+
+For each parallel agent, generate a complete, self-contained brief:
+
+```
+AGENT BRIEF -- Wave [N], Agent [N]
+
+═══════════════════════════════════════════════════
+TASK: [Item title]
+BRANCH: feature/[project-slug]-[item-slug]
+WORKTREE: isolated (git worktree)
+═══════════════════════════════════════════════════
+
+## What to Build
+[Full item description from shard with all commentary]
+
+## Context from Prior Waves
+[Any outputs from Wave 0 or earlier waves this agent needs]
+- Foundation structure: [summary of what Wave 0 built]
+- Related PR: [link to merged PR from dependency, if any]
+
+## Spec References
+- PRD: [path if exists]
+- Architecture: [path if exists]
+- Design System: [path if exists]
+
+## Scope Boundaries
+IN SCOPE:
+- [specific capabilities for this item]
+
+OUT OF SCOPE (handled by other agents):
+- [what other agents are building -- don't overlap]
+
+## Acceptance Criteria
+- [criterion 1]
+- [criterion 2]
+- [criterion 3]
+
+## Files to Create/Modify
+- [estimated file list based on shard commentary]
+
+## PR Instructions
+- Branch: feature/[project-slug]-[item-slug]
+- PR title: [suggested title]
+- PR description: [link back to shard item]
+- Label: wave-[N]
+```
+
+### Step 3: Launch Batch
+
+Execute the batch using the Agent tool with worktree isolation:
+
+```
+LAUNCHING BATCH -- Wave [N]
+
+Spawning [N] agents in isolated worktrees...
+
+Agent 1: [item title] → feature/[slug]-[item-slug]
+Agent 2: [item title] → feature/[slug]-[item-slug]
+Agent 3: [item title] → feature/[slug]-[item-slug]
+
+Each agent will:
+1. Create its feature branch
+2. Implement the item following the brief
+3. Run QA checks
+4. Create a PR
+5. Report back
+
+I'll monitor progress and notify you when agents complete.
+Estimated completion: [all agents work in parallel]
+```
+
+**Implementation:** Use the Agent tool with `isolation: "worktree"` for each parallel item. Each agent gets the full brief as its prompt. Run agents in background with `run_in_background: true`.
+
+### Step 4: Wave Completion & Merge Coordination
+
+When all agents in a wave complete:
+
+```
+WAVE [N] COMPLETE
+
+Agent 1: ✓ PR #[N] -- [title] -- [status: ready for review / merged]
+Agent 2: ✓ PR #[N] -- [title] -- [status: ready for review / merged]
+Agent 3: ✓ PR #[N] -- [title] -- [status: ready for review / merged]
+
+Results:
+- [N] PRs created
+- [N] tests passing
+- [N] conflicts detected (if any)
+
+Next steps:
+1. Review and merge Wave [N] PRs
+2. I'll then launch Wave [N+1] agents
+   (they depend on Wave [N] being merged)
+
+Or: merge all and launch Wave [N+1] automatically? (yes/no)
+```
+
+### Step 5: Conflict Resolution
+
+If parallel agents create conflicting changes:
+
+```
+CONFLICT DETECTED
+
+PR #[A] and PR #[B] both modify [file]:
+- PR #[A]: [what it changed]
+- PR #[B]: [what it changed]
+
+Resolution options:
+1. Merge PR #[A] first, rebase PR #[B] (recommended if [A] is foundation)
+2. Merge PR #[B] first, rebase PR #[A]
+3. I'll create a combined PR resolving both
+4. Manual resolution (you handle it)
+```
+
+---
+
+## Batch Safety Rules
+
+1. **Foundation items are ALWAYS sequential** -- never parallelize items that everything else depends on
+2. **Maximum agents per wave:** 10 -- more than 10 creates merge chaos
+3. **Each agent is fully isolated** -- worktree, own branch, own PR; no shared state
+4. **Agent briefs are self-contained** -- agents cannot access each other's work; include all needed context
+5. **Wave N+1 waits for Wave N merge** -- never launch dependent work before its dependencies are merged
+6. **Conflicts abort the wave** -- if an agent fails or conflicts arise, pause and resolve before continuing
+7. **Shard doc tracks status** -- update each item's status as agents complete (pending → in_progress → PR_open → merged)
+
+---
+
+## Shard Document Status Tracking
+
+When batch execution is active, the shard document tracks progress:
+
+```markdown
+## Task List
+
+### 1.1 [Item title]
+**Status:** ✅ Merged (PR #42)
+**Wave:** 0 (foundation)
+**Branch:** feature/project-setup
+...
+
+### 2.1 [Item title]
+**Status:** 🔄 In Progress (Agent 1, Wave 1)
+**Wave:** 1
+**Branch:** feature/project-user-auth
+...
+
+### 3.1 [Item title]
+**Status:** ⏳ Pending (Wave 2 -- waiting on 2.1)
+**Wave:** 2
+**Branch:** --
+...
+```
+
+Status icons:
+- ⏳ Pending -- not yet started
+- 🔄 In Progress -- agent working
+- 📋 PR Open -- PR created, awaiting review
+- ✅ Merged -- done
+- ❌ Failed -- agent failed, needs manual intervention
+- ⚠️ Conflict -- merge conflict detected
 
 ---
 
@@ -415,19 +652,30 @@ Raw ideas / brain dump / big task
   |
   v
 SPEC SHARDER (this skill)
-  |  Organize -> Annotate -> Prioritize -> Output
+  |  Organize -> Annotate -> Prioritize -> Dependency graph -> Output
   |
   v
-Structured task list with /propose commands
+Structured task list with execution options
   |
-  +-- User picks items to execute
-  |     /propose [item 1]  ->  full SDLC pipeline
-  |     /propose [item 2]  ->  full SDLC pipeline
+  ├── SEQUENTIAL: /propose each item one at a time
   |
-  +-- Or user runs individual skills
-        /product-manager [item]   -> requirements only
-        /qa-tester [module]       -> testing only
-        /vulnerability-tester [module] -> security only
+  ├── BATCH: Parallel agents in worktrees (wave-based)
+  |     Wave 0 (foundation) ──sequential──> merge
+  |       |
+  |       v
+  |     Wave 1 ──parallel agents──> PRs ──merge──>
+  |       |
+  |       v
+  |     Wave 2 ──parallel agents──> PRs ──merge──>
+  |       |
+  |       v
+  |     Wave N (integration) ──sequential──> final merge
+  |
+  ├── AUTO: /propose in auto mode (sequential, no gates)
+  |
+  ├── PICK: Select individual items manually
+  |
+  └── HYBRID: Foundation sequential + features parallel + integration sequential
 ```
 
 ### Output: What You Hand Off
@@ -468,14 +716,26 @@ PROCESS
   |  Identify dependencies
   |  Assign priorities
   |  Annotate with commentary
+  |  Compute parallel waves
   |
   v
-OUTPUT (markdown file(s))
+OUTPUT (markdown file(s) with dependency graph)
   |
   v
-GUIDE USER TO NEXT STEP
+EXECUTION OPTIONS
   |
-  +-- "/propose [item]" for full pipeline
-  +-- Individual skill for targeted work
-  +-- Re-invoke spec-sharder with more points to merge
+  +-- Sequential: "/propose [item]" one at a time
+  |
+  +-- Batch Execute: spawn parallel agents per wave
+  |     |  Wave 0: foundation (sequential)
+  |     |  Wave 1-N: parallel agents in worktrees -> PRs
+  |     |  Each agent gets self-contained brief
+  |     |  Wave N+1 waits for Wave N merge
+  |     |  Shard doc tracks status (⏳🔄📋✅❌⚠️)
+  |     v
+  |     Monitor -> Merge -> Next Wave -> Complete
+  |
+  +-- Auto: /propose in auto mode (sequential, no gates)
+  +-- Pick: individual items manually
+  +-- Hybrid: sequential foundation + parallel features + sequential integration
 ```
