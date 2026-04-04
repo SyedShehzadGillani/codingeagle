@@ -2,7 +2,7 @@
 
 ## What We Built
 
-12 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
+13 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
 
 | Skill | Purpose |
 |-------|---------|
@@ -15,6 +15,7 @@
 | `codingeagle:performance-tester` | Frontend (Core Web Vitals, bundle size), backend (API latency, N+1 queries), database (indexes, pagination), infrastructure (CDN, caching). |
 | `codingeagle:ux-reviewer` | Heuristic evaluation (Nielsen's 10) + WCAG 2.1 accessibility audit. Prioritized improvement tiers. User selects what to apply. |
 | `codingeagle:techdebt` | Aggressive deduplication engine. Scans for exact/near duplicates and missed abstractions. Spawns parallel agents to fix all duplications. Ends with mandatory test + lint verification. |
+| `codingeagle:adversarial` | Red team / devil's advocate. Challenges PRDs, architecture, design, code, and business decisions. 6 attack modes. Finds flaws in decisions, not just implementations. Includes counter-arguments and dissent notes for intellectual honesty. |
 | `codingeagle:spec-sharder` | Preprocessor: takes scattered ideas or big tasks, organizes into structured, prioritized task lists with AI commentary. Feeds into /propose. |
 | `codingeagle:propose` | Full 11-phase SDLC pipeline with git workflow. Manual (11 gates) and Auto mode. Resume protocol for interrupted sessions. |
 | `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. |
