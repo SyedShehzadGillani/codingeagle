@@ -2,7 +2,7 @@
 
 ## What We Built
 
-14 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
+15 skills + 1 shared protocol doc packaged as the `codingeagle` plugin at `~/.claude/plugins/codingeagle/`:
 
 | Skill | Purpose |
 |-------|---------|
@@ -17,6 +17,7 @@
 | `codingeagle:techdebt` | Aggressive deduplication engine. Scans for exact/near duplicates and missed abstractions. Spawns parallel agents to fix all duplications. Ends with mandatory test + lint verification. |
 | `codingeagle:adversarial` | Red team / devil's advocate. Challenges PRDs, architecture, design, code, and business decisions. 6 attack modes. Finds flaws in decisions, not just implementations. Includes counter-arguments and dissent notes for intellectual honesty. |
 | `codingeagle:doc-cleanup` | Documentation hygiene engine. Scans for stale/resolved/orphaned/oversized/duplicate docs. Archives or compresses directly. Enforces 500-line per-file and 200KB total limits. 6 compression algorithms. Archive-first safety with undo support. |
+| `codingeagle:save-session` | Saves conversation context to markdown: primary goal, decisions made (with reasoning), what was rejected, unfinished work, resume instructions, user preferences. Chains sessions together via index. Manual invoke only. |
 | `codingeagle:spec-sharder` | Preprocessor: takes scattered ideas or big tasks, organizes into structured, prioritized task lists with AI commentary. Feeds into /propose. |
 | `codingeagle:propose` | Full 11-phase SDLC pipeline with git workflow. Manual (11 gates) and Auto mode. Resume protocol for interrupted sessions. |
 | `codingeagle:analyze` | Reverse-engineers existing projects (read-only). Generates project identity, component map, data model, reconstructed PRD, health assessment. |
